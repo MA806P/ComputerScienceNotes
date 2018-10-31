@@ -1,2 +1,2 @@
-# ComputerScienceNotes
-Computer Science Notes
+# Computer Network Notes
+Computer Network
