@@ -64,9 +64,10 @@ MAC地址有一定的定位功能，但是通信范围比较小，局限在一�
 网络设备的状态标识 net_device flags: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500
 UP 标识网卡处于启动的状态； BROADCAST 表示这个网卡有广播地址，可以发送广播包；
 MULTICAST 表示网卡可以发送多播包；LOWER_UP 表示L1是启动的，也即有网线插着。
-mtu 1500：最大传输单元MUT为11500，这是以太网的默认值；
-qdisc 全称是queueing discipline 排队规则，最简单的是pfifo不对进入的数据包做任何的处理，数据包采用先入先出的方式通过队列。pfifo_fast复杂一些队列包括撒个波段band，每个波段使用先进先出规则，波段的优先级也不相同。
-
+mtu 1500：最大传输单元MUT为1500，这是以太网的默认值；
+MTU 是二层MAC层的概念，规定连MAC头带正文合起来不允许超过1500个字节，正文里有IP头 TCP头 HTTP头，如果放不下就需要分片来传输；
+qdisc 全称是queueing discipline 排队规则，最简单的是pfifo不对进入的数据包做任何的处理，数据包采用先入先出的方式通过队列。pfifo_fast复杂一些队列包括三个波段band，每个波段使用先进先出规则，波段的优先级也不相同。
+数据包按照服务类型Type of Service，TOS 被分配到三个波段里面。TOS是IP头里面的一个字段，代表了当前的包是高优先级还是低优先级的。
 
 
 小结：
