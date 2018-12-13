@@ -1,4 +1,4 @@
-·# Computer Network Notes
+# Computer Network Notes
 Computer Network
 
 ### 一、网络协议
