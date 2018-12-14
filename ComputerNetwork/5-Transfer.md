@@ -52,10 +52,19 @@ URG ACK PSH RST SYN FIN   窗口大小16位  校验和16位 紧急指针16位 �
 
 
 
-TCP 三次握手
+TCP 三次握手：请求 - 应答 - 应答之应答
+为何是三次，两次不靠谱，三次只是最优的办法，严格来说三十次都不能确定
 
-	
+TCP包的序号问题，A B 互相告诉，我这面发起的包的序号起始是从哪个号开始的
+每个链接都要有不同的序号，随着时间变化，可看成32位计数器，每 4ms +1，IP 包头里有个 TTL 生存时间。
+双方建立了信任，建立了链接，需要维护一个状态机。
 
+![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Connect.jpg)
+
+
+TCP 四次挥手
+
+![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Disconnect.jpg)
 
 
 
