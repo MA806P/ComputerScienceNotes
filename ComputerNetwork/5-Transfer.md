@@ -51,29 +51,47 @@ URG ACK PSH RST SYN FIN   窗口大小16位  校验和16位 紧急指针16位 �
 拥塞控制，知进知退
 
 
+<br>
 
 TCP 三次握手：请求 - 应答 - 应答之应答
 为何是三次，两次不靠谱，三次只是最优的办法，严格来说三十次都不能确定
 
-TCP包的序号问题，A B 互相告诉，我这面发起的包的序号起始是从哪个号开始的
+三次握手除了双方建立连接外，主要还是为了沟通 TCP包的序号问题，A B 互相告诉，我这面发起的包的序号起始是从哪个号开始的
 每个链接都要有不同的序号，随着时间变化，可看成32位计数器，每 4ms +1，IP 包头里有个 TTL 生存时间。
 双方建立了信任，建立了链接，需要维护一个状态机。
 
 ![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Connect.jpg)
 
+<br>
 
 TCP 四次挥手
 
 ![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Disconnect.jpg)
 
+断开的时候，当 A 说不玩了，就进入 FIN_WAIT_1 的状态，B 收到消息后，发送知道了。就进入 CLOSE_WAIT 的状态。
+A 收到 ”B说知道了“ 就进入 FIN_WAIT_2 的状态。
+如果B这时直接跑了，A将永远在这个状态，TCP协议没对这个状态处理，但Linux可以调整tcp_fin_timeout参数设置一个超时时间。
+如果B没跑，发送了”B也不玩了“到A，A发送”知道B不玩了“的ACK后，从FIN_WAIT_2状态结束，为了防止最后的ACK B收不到，B要是收不到B会重新发一个”B不玩了“，为了防止这中情况，TCP协议要求A最后等待一段时间TIME_WAIT,这个时间要足够长，长到B没收到ACK的话，”B说不玩了“重发。
+A不等待直接跑了，还有一个问题，A的端口就空出来了，但是B不知道，B还有很多包，可能还在路上，如A的端口被一个新的应用占用了，这个新的应用会收到B的发来的包，虽然序列号是重新生成的，但也要上个双保险防止产生混乱，因而也要等足够长的时间，等B的包都结束生命，再空出端口出来。
 
+等待时间设置为 2MSL，Maximum Segment LifeTime 报文最大生存时间，是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。TCP报文是基于 IP 协议的，IP头中有 TTL 域，是IP数据报可以经过的最大路由数，每经过一个路由器此值-1，当为0就丢弃，同时发送ICMP报文通知源主机。协议规定 MSL 为 2分钟，实际常用的 30s,1分钟，2分钟。
 
+如果B超过2MSL依然没有收到A发的FIN的ACK，怎么办，当然B会重发FIN，A已经等了足够长的时间已跑了，A收到B重发的包后，直接发送RST，B就知道A早跑了。
 
+<br>
 
+TCP 状态机
 
+![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-status.jpg)
 
+<br>
 
+小结
+1、TCP包头复杂，主要关注五个问题，顺序问题、丢包问题、连接维护、流量控制、拥塞控制
+2、三次握手  四次挥手
 
+如何在系统中查看某个连接的状态？
+连接维护问题解决了。用什么数据结构来处理其他的四个问题
 
 
 
