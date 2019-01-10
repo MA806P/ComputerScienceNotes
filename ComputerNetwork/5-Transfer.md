@@ -116,5 +116,48 @@ TCP 协议，为了保证顺序性，每个包都有一个 ID，建立连接的�
 第四部分，未发送，暂时不会发送。
 流量控制，把握分寸
 
+在 TCP 里接收端会给发送端报一个窗口的大小 Advertised window 大小对应上面的第二部分和第三部分。
+发送端：
+LastByteAcked: 第一部分和第二部分分界线
+LastByteSent: 二三分界线
+LastByteAcked + AdvertisedWindow: 三四部分分界线
+接收端：
+第一部分：接收并且确认过的
+第二部分：还没接收，马上就能接收的
+第三部分：还没接收，也没法接收的。超过工作量，做不完。
+MaxRcvBuffer: 最大换存量
+LastByteRead: 之后都是已经接收了，但还没被应用层读取的
+LastByteExpected: 一二分界线
+NextByteExpected 和 LastByteRead 的差其实是还没被应用层读取的部分，占用掉的 MaxRcvBuffer 的量 A。
+Advertised window = MaxRcvBuffer - A
+Advertised window = MaxRcvBuffer - （NextByteExpected - 1 - LastByteRead）
+二三部分分界线 = NextByteExpected + Advertised window = LastByteRead + MaxRcvBuffer
+
+
+
+顺序问题与丢包问题
+发送端：
+1 2 3 已发送已确认。4 5 6 7 8 9 已发送未确认。10 11 12 还没发出。13 14 15 不准备发。
+
+接收端：
+1 2 3 4 5 完成ACK，没读取。6 7 等待接收。8 9 已接收，没有ACK
+
+* 4 5 接收方说ACK了，但是发送方没收到，可能丢了，可能在路上。
+* 8 9 已经到了，但 6 7 没到，出现了乱序，缓存着但是没办法ACK
+
+确认与重发机制：
+超时重试，对每个发送了，但是没有ACK的包，都设定一个定时器，超过了一定时间，重新发送。时间必须大于往返时间RTT，不宜过长 超时时间变长 访问变慢。
+估计往返时间，需要TCP通过采样RTT的时间，进行加权平均，算出一个值，这个值根据网络状况不断地变化。除了采样RTT，还要采样RTT的波动范围，计算出一个估计的超时时间。重传时间是不断变化的，称为自适应重传算法。
+
+发送端，一段时间后，5 6 7 都超时了，就会重新发送。接收端发现 5 原来接收过，于是丢弃 5，6 收下，发送 ACK，要求下一个是 7，7 又丢了，7 再次超时的时候，有需要重传的时候，TCP 策略是超时间加倍。每当遇到一次超时重传的时候，都会将下一次超时时间间隔设为先前的两倍。两次超时，就说明网络环境差，不宜频繁反复发送。
+
+
+
+流量控制
+
+
+
+
+
 
 
