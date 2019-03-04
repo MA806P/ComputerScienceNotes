@@ -59,13 +59,13 @@ TCP 三次握手：请求 - 应答 - 应答之应答
 三次握手除了双方建立连接外，主要还是为了沟通 TCP包的序号问题，A B 互相告诉，我这面发起的包的序号起始是从哪个号开始的
 每个链接都要有不同的序号，随着时间变化，可看成32位计数器，每 4ms +1，IP 包头里有个 TTL 生存时间。
 双方建立了信任，建立了链接，需要维护一个状态机。
-
+<br>
 ![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Connect.jpg)
 
 <br>
 
 TCP 四次挥手
-
+<br>
 ![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Disconnect.jpg)
 
 断开的时候，当 A 说不玩了，就进入 FIN_WAIT_1 的状态，B 收到消息后，发送知道了。就进入 CLOSE_WAIT 的状态。
@@ -181,11 +181,31 @@ TCP的服务端要先监听一个端口，一般是先调用 bind 函数，给�
 接下来，服务端调用 accept 函数，拿出一个已经完成的连接进行处理。如果还没有完成，就要等着。在服务端等待的时候，客户端可以通过 connect 函数发起连接。先在参数中指明要连接的 IP 地址和端口号，然后开始发起三次握手。内核会给客户端分配一个临时的端口，一旦握手成功，服务端的 accept 就会返回另一个 Socket。
 监听的Socket和真正用来传数据的Socket是两个，一个叫做监听Socket，一个叫做已连接Socket。
 连接建立成功后，双方开始通过read和write函数来读写数据，就像往一个文件流里面写东西一样。
+<br>
 ![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Socket-Connect.jpg)
 TCP 的 Socket 就是一个文件流，Socket 在 Linux 中就是以文件的形式存在的。除此之外，还存在文件描述符，写入和读出，也是通过文件描述符。
 
 在内核中，Socket是一个文件，对应就有文件描述符，每一个进程都有一个数据结构 task_struct 文件描述数组，列出这个进程打开的所有文件的文件描述符，是一个整数，是这个数组的下标。task_struct 数组中的内容是一个指针，指向内核中所有打开文件的列表。文件有一个inode，在 inode 中指向了Socket在内核中的Socket结构。这个结构里，主要是两个队列，一个是发送队列，一个是接收队列，在这两个队列里保存的是一个缓存 sk_buff，这个缓存里能看到完整的包的结构。
+<br>
 ![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Socket-FileNode.jpg)
+
+<br>
+
+2、基于 UDP 协议的 Socket 程序函数调用过程
+UDP 是没有连接的，所以不需要三次握手，也就不需要调用 listen 和 connect，但是 UDP 的交互任然需要 IP 和端口号，因而也需要 bind。
+UDP 没有维护连接的状态，不需要每对连接建立一组 Socket ，而是只要有一个 Socket 就能够和多个客户端通信，没有连接状态，每次通信的时候都调用 sendto 和 recvfrom 都可以传入 IP 地址和端口。
+<br>
+![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/5-Transfer-Socket-UDPConnect.jpg)
+
+<br>
+3、服务器如何接更多的项目  
+最大连接数，系统会用四个元组来标识一个 TCP 连接
+{本机 IP, 本机端口, 对端 IP, 对端端口}
+服务器通常固定在某个本地端口上监听，等待客户端的连接请求。
+最大 TCP 连接数 = 客户端 IP 数 X客户端端口数 = 2^32 * 2^16 = 2^48
+当然服务端最大并发 TCP 连接数远不能达到理论上限。首先主要是文件描述符限制，Socket 都是文件，所以首先要通过 ulimit 配置文件描述符的数目；另一个限制是内存，每个 TCP 连接都要占用一定内存，操作系统是有限的。要想接更多的项目就需要降低每个项目消耗的资源数目。<br>
+a、多进程方式  
+相当于你是一个代理，在那里监听来的请求，一旦建立了一个连接，就会有一个已连接 Socket ，这是可以创建一个子进程，然后将基于已连接 Socket 的交互交给这个新的子进程来做。
 
 
 
