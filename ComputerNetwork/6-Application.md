@@ -162,6 +162,30 @@ Nonce 随机数保证唯一，或者 Timestamp 和 Nonce 合起来保证唯一�
 * 对称加密效率高，解决不了密钥传输问题；非对称加密可解决，但是效率不高。
 * 非对称加密需要通过证书和权威机构来验证公钥的合法性。
 * HTTPS 综合了对称和非对称加密算法的 HTTP 协议。既保证传输安全，也保证传输效率。
+<br>
+
+
+
+### 十六、流媒体协议  
+
+视频其实就是快速播放一连串连续的图片，每张图片称为帧，只要每秒的帧数据足够多，比如每秒30帧，以人的眼睛的敏感度，是看不出的，这就是常说的帧率 FPS。
+如果都将所有帧图片都保存下来，视频太大，根本没办法存储和传输。  
+人们想到了编码，用尽量少的 Bit 数保存视频，使播放的画面看起来任然没精美。编码是一个压缩的过程。  
+
+视频和图片的特点：  
+1、控件冗余：图像的相邻像素之间有较强的相关性，一张图相邻像素往往是渐变的，没必要每个像素都完整地保存，可以隔几个保存一个，中间的用算法计算出来。  
+2、时间冗余：视频序列的相邻图像之间内容相似，可以根据已有的图片进行预测和推断。  
+3、视觉冗余：人的视觉系统对某些细节不敏感，可以允许丢失一些数据。
+4、编码冗余：不同像素值出现的概率不同，概率高的用的字节少，概率低的用的字节多   
+<br>
+![](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/6-Application-ViewCode.jpg)
+<br>
+
+视频编码：  
+* ITU（International Telecommunications Union) 的 VCEG (Vido Coding Experts Group)，国际电联下的 VCEG 。  H.265、H.264、...
+* ISO (International Telecommunications Union) 的 VCEG ，ISO 旗下的 MPEG。 MPEG-1 MPEG-2 MPEG-4 MPEG-7
+
+ITU-T 国际电信联盟电信标准化部门 Telecommunication Standardization Sector 与 MPEG 联合定制了 H.264/MPEG-4 AVC   
 
 
 
