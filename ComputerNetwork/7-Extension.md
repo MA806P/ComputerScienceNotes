@@ -64,6 +64,53 @@ VXLAN 则是从二层外面就套了一个 VXLAN 的头，这里面包含的 VXL
 <br>
 
 
+### 三十、容器网络 Flannel  
+
+* 基于 NAT 的容器网络模型在微服务架构下有两个问题，一个是 IP 重叠，一个是端口冲突，需要通过 Overlay 网络的机制保持跨节点的连通性。   
+* Flannel 是跨节点容器网络方案之一，它提供的 Overlay 方案主要有两种方式，一种是 UDP 在用户态封装，一种是 VXLAN 在内核态封装，而 VXLAN 的性能更好一些。  
+<br>
+
+
+### 三十一、容器网络 Calico  
+* Calico 推荐使用物理机作为路由器的模式，这种模式没有虚拟化开销，性能比较高。   
+* Calico 的主要组件包括路由、iptables 的配置组件 Felix、路由广播组件 BGP Speaker，以及大规模场景下的 BGP Route Reflector。   
+* 为解决跨网段的问题，Calico 还有一种 IPIP 模式，也即通过打隧道的方式，从隧道端点来看，将本来不是邻居的两台机器，变成相邻的机器。  
+<br>  
+
+### 三十二、RPC协议  
+
+* 远程调用看起来用 Socket 编程就可以了，其实是很复杂的，要解决协议约定问题、传输问题和服务发现问题。   
+* 大牛 Bruce Jay Nelson 的论文、早期 ONC RPC 框架，以及 NFS 的实现，给出了解决这三大问题的示范性实现，也即协议约定要公用协议描述文件，并通过这个文件生成 Stub 程序；RPC 的传输一般需要一个状态机，需要另外一个进程专门做服务发现。  
+<br>
+
+### 三十三、基于 XML 的 SOAP 协议  
+
+基于 XML 的最著名的通信协议SOAP 简单对象访问协议 Simple Object Access Protocol，使用 XML 编写简单的请求和回复消息，并用 HTTP 协议进行传输。  
+
+Web 服务描述语言，WSDL（Web Service Description Languages）  
+
+* 原来的二进制 RPC 有很多缺点，格式要求严格，修改过于复杂，不面向对象，于是产生了基于文本的调用方式——基于 XML 的 SOAP。   
+* SOAP 有三大要素：协议约定用 WSDL、传输协议用 HTTP、服务发现用 UDDL。  
+<br>
+
+### 三十四、基于 JSON 的 RESTful 接口协议  
+RESTful 可不仅仅是指 API，而是一种架构风格，全称 Representational State Transfer，表述性状态转移  
+
+* SOAP 过于复杂，而且设计是面向动作的，因而往往因为架构问题导致并发量上不去。   
+* RESTful 不仅仅是一个 API，而且是一种架构模式，主要面向资源，提供无状态服务，有利于横向扩展应对高并发。  
+<br> 
+
+### 三十五、二进制类 RPC 协议  
+
+* RESTful API 对于接入层和 Controller 层之外的调用，已基本形成事实标准，但是随着内部服务之间的调用越来越多，性能也越来越重要，于是 Dubbo 的 RPC 框架有了用武之地。   
+* Dubbo 通过注册中心解决服务发现问题，通过 Hessian2 序列化解决协议约定的问题，通过 Netty 解决网络传输的问题。   
+* 在更加复杂的微服务场景下，Spring Cloud 的 RESTful 方式在内部调用也会被考虑，主要是 JAR 包的依赖和管理问题。  
+<br>  
+
+### 三十六、跨语言类 RPC 协议  
+* GRPC 是一种二进制，性能好，跨语言，还灵活，同时可以进行服务治理的多快好省的 RPC 框架，唯一不足就是还是要写协议文件。   
+* GRPC 序列化使用 Protocol Buffers，网络传输使用 HTTP 2.0，服务治理可以使用基于 Envoy 的 Service Mesh。
+
 
 
 
