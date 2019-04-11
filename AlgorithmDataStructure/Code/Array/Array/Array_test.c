@@ -182,6 +182,7 @@ void arrayDelValue(Array *array, void *value) {
     bool bCopy = false;
     for (size_t i = 0; i < array->len; ++i) {
         if (!bCopy) {
+            
             int nCmp = 0;
             if (NULL != array->match) {
                 nCmp = array->match(pBegin + i * array->typeSize, value);
@@ -193,14 +194,17 @@ void arrayDelValue(Array *array, void *value) {
                 bCopy = true;
                 continue;
             }
+            
         } else {
-            void *pOld = pBegin + (i+1) * array->typeSize;
-            void *pNew = pBegin + i * array->typeSize;
+            char *pOld = pBegin + (i-1) * array->typeSize;
+            char *pNew = pBegin + i * array->typeSize;
+            
             if (NULL != array->dup) {
                 array->dup(pNew, pOld);
             } else {
-                memcpy(pNew, pOld, array->typeSize);
+                memcpy(pOld, pNew, array->typeSize);
             }
+            
         }
     }
     
