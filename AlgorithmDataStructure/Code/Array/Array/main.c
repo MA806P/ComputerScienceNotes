@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include "Array_test.h"
-
+#include "array.h"
 
 
 void tempArrayPrint(Array *array) {
@@ -25,9 +25,7 @@ void tempArrayPrint(Array *array) {
     }
 }
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
+void callFunction () {
     
     Array *array = arrayCreate();
     arrayInit(array, 10, sizeof(char));
@@ -48,14 +46,14 @@ int main(int argc, const char * argv[]) {
     char searchItem = 'b';
     size_t index = arraySearchValue(array, &searchItem);
     printf("search 'b' result = %ld\n", index);
-
+    
     char *indexItem = arrayIndex(array, 2);
     printf("index of 2 = %c\n", *indexItem);
-
+    
     char changeItem = 'y';
     arrayModify(array, 1, &changeItem);
     tempArrayPrint(array);
-
+    
     printf("array len = %ld; array size = %ld\n", arrayLen(array), arraySize(array));
     
     arrayEmpty(array);
@@ -88,6 +86,16 @@ int main(int argc, const char * argv[]) {
     
     arrayEmpty(array2);
     
+}
+
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    printf("Hello, World!\n");
+    
+    callFunction();
+    
+    //int idx;
+    //struct array ten_int = {10, 0, NULL};
     
     
     return 0;

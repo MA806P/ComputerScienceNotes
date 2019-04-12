@@ -47,8 +47,32 @@ int insert(struct array *array, int elem) {
     return idx;
 }
 
-void find(struct array *array) {
+int delete(struct array *array, int idx) {
     
+    if (idx < 0 || idx >= array->len) {
+        return -1;
+    }
+    
+    memmove(&array->arr[idx], &array->arr[idx+1], (array->len - idx - 1) * sizeof(int));
+    array->len--;
+    return 0;
 }
+
+int search(struct array *array, int elem) {
+    int idx;
+    
+    for (idx = 0; idx < array->len; idx++) {
+        if (array->arr[idx] == elem) {
+            return idx;
+        }
+        if (array->arr[idx] > elem) {
+            return -1;
+        }
+    }
+    
+    return -1;
+}
+
+
 
 
