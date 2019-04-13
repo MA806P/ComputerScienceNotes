@@ -8,12 +8,6 @@
 
 #include "array.h"
 
-struct array {
-    int size;
-    int len;
-    int *arr;
-};
-
 
 void dump(struct array *array) {
     for (int idx = 0; idx < array->len; idx++) {

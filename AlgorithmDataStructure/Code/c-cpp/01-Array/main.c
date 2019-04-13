@@ -25,7 +25,9 @@ void tempArrayPrint(Array *array) {
     }
 }
 
-void callFunction () {
+
+
+void callFunction1 () {
     
     Array *array = arrayCreate();
     arrayInit(array, 10, sizeof(char));
@@ -85,18 +87,38 @@ void callFunction () {
     tempArrayPrint(array2);
     
     arrayEmpty(array2);
+}
+
+
+void callFunction2 () {
+    struct array ten_int = {10, 0, NULL};
+    alloc(&ten_int);
+    if (NULL == ten_int.arr) {
+        return;
+    }
     
+    insert(&ten_int, 11);
+    insert(&ten_int, 21);
+    insert(&ten_int, 31);
+    insert(&ten_int, 12);
+    dump(&ten_int);
+    
+    int idx;
+    idx = search(&ten_int, 12);
+    printf("12 is at position %d\n", idx);
+    
+    printf("=== delete [2] element\n");
+    delete(&ten_int, 1);
+    dump(&ten_int);
 }
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
     
-    callFunction();
+//    callFunction1();
     
-    //int idx;
-    //struct array ten_int = {10, 0, NULL};
-    
+    callFunction2();
     
     return 0;
 }

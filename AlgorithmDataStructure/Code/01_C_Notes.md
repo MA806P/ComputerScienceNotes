@@ -23,6 +23,12 @@ int memcmp (const void *s1, const void *s2, size_t n);
 void * memmove(void *dest, const void *src, size_t num);  
 memmove() 与 memcpy() 类似都是用来复制 src 所指的内存内容前 num 个字节到 dest 所指的地址上。不同的是，memmove() 更为灵活，当src 和 dest 所指的内存区域重叠时，memmove() 仍然可以正确的处理，不过执行效率上会比使用 memcpy() 略慢些。  
 
+5、点运算符 . 和箭头运算符 -> 的区别  
+    两者都是二元操作符，而且右边的操作数都是成员的名称。  
+    点运算符( . )的左边操作数是一个结果为结构的表达式；  
+    箭头运算符( -> )的左边的操作数是一个指向结构体的指针。  
+    
+    
 
 
 
