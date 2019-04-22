@@ -34,18 +34,37 @@ void dump(struct list *list)
     }
 }
 
-void insertNode(listNode *pre, listNode *elem) 
+void insertNode(listNode **prev, listNode *elem)
 {
-    if (NULL == pre || NULL == elem)
+    if (NULL == prev || NULL == elem)
     {
         return;
     }
-
-    elem->next = pre->next;
-    pre->next = elem;
+    
+    if (*prev) {
+        elem->next = *prev;
+    }
+    *prev = elem;
 }
 
-void deleteNode(struct list *) 
-{
+void insert_head(struct list *head, listNode *elem) {
+    insertNode(&head->head, elem);
+}
+
+struct list * delete(listNode **prev)  {
+    listNode *tmp;
     
+    if (*prev) {
+        return NULL;
+    }
+    
+    tmp = *prev;
+    *prev = (*prev)->next;
+    tmp->next = NULL;
+    
+    return tmp
+}
+
+struct list * delete_head(struct list * head) {
+    return delete(&head->head);
 }
