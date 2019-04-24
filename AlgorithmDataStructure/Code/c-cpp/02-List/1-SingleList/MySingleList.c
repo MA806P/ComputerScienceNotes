@@ -153,8 +153,8 @@ int main()
         nodes[idx].next = NULL;
     }
     
-    insert_head(&head, &nodes[3]);
-    insert_head(&head, &nodes[2]);
+    insert_head(&head, &nodes[6]);
+    insert_head(&head, &nodes[5]);
     insert_head(&head, &nodes[1]);
     insert_head(&head, &nodes[0]);
     dump(&head);
@@ -163,8 +163,8 @@ int main()
     prev = search(&head, 2);
     printf("%d\n", (*prev)->value);
     
-//    insertNode(prev, &nodes[3]);
-//    dump(&head);
+    insertNode(prev, &nodes[3]);
+    dump(&head);
     
     
     return 0;
