@@ -4,8 +4,8 @@
 
 struct listNode
 {
-    struct listNode *next;
     int value;
+    struct listNode *next;
 };
 
 struct list
@@ -18,7 +18,7 @@ bool is_empty(struct list *list)
     return list->head == NULL;
 }
 
-void dump(struct list *list) 
+void dump(struct list *list)
 {
     if (NULL == list)
     {
@@ -26,10 +26,13 @@ void dump(struct list *list)
     }
     
     struct listNode *head = list->head;
+    
+    //printf("--- %p=%p  %p=%p\n", &list, list, &(list->head), list->head);
+    
     int idx = 0;
     while (head)
     {
-        printf("[%02d]: %08d\n", idx, head->value);
+        printf("[%02d]: %02d %p=%p %p %p %p\n", idx, head->value, &head, head, &(head->value), &(head->next), head->next);
         idx++;
         head = head->next;
     }
@@ -73,24 +76,22 @@ struct listNode * delete_head(struct list * head) {
 
 struct listNode ** search(struct list * head, int target)
 {
+    //printf("\n search \n");
+    
     struct listNode **prev, *tmp;
     
     prev = &head->head;
     tmp = *prev;
     while ( tmp && (tmp->value < target))
     {
+        //printf("%p=%p %p=%p %p=%p \n", &prev, prev, &(*prev), (*prev), &tmp, tmp);
         prev = &tmp->next;
         tmp = *prev;
     }
+    
+    //printf("search end \n");
+    
     return prev;
-    
-//    for (prev = &head->head, tmp = *prev;
-//         tmp && (tmp->value < target);
-//         prev = &tmp->next, tmp = *prev)
-//        ;
-//
-//    return prev;
-    
 }
 
 void reverse(struct list *head)
@@ -151,6 +152,7 @@ int main()
     for (idx = 0; idx < 10; idx++) {
         nodes[idx].value = idx;
         nodes[idx].next = NULL;
+        printf("%p\n", &(nodes[idx]));
     }
     
     insert_head(&head, &nodes[6]);
@@ -165,6 +167,40 @@ int main()
     
     insertNode(prev, &nodes[3]);
     dump(&head);
+    
+    
+    printf("\n**********************\n");
+    
+    printf("middle elem is %d\n", middle(&head)->value);
+    
+    prev = search(&head, 5);
+    if ((*prev) && ((*prev)->value == 5)) {
+        printf("contain\n");
+    } else {
+        printf("not contain\n");
+    }
+    
+    delete(prev);
+    prev = search(&head, 5);
+    if ((*prev) && ((*prev)->value == 5)) {
+        printf("contain\n");
+    } else {
+        printf("not contain\n");
+    }
+    dump(&head);
+    
+    
+    printf("\n**********************\n");
+    
+    printf("\n After reverse \n");
+    reverse(&head);
+    dump(&head);
+    printf("\n middle elem is %d\n", middle(&head)->value);
+    
+    printf("list is %s cyclic\n", is_cyclic(&head) ? "" : "not");
+    
+    nodes[0].next = &nodes[6];
+    printf("list is %s cyclic\n", is_cyclic(&head) ? "" : "not");
     
     
     return 0;
