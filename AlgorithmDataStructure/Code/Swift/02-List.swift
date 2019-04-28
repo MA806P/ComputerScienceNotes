@@ -124,6 +124,20 @@ class List<Element: Equatable> {
         }
     }
     
+    //链表反转
+    func reverse() {
+        var reverseHead: Node<Element>?, currentNode: Node<Element>?, prevNode: Node<Element>?
+        
+        reverseHead = dummy
+        currentNode = reverseHead!.next
+        while currentNode == nil {
+            reverseHead = currentNode
+        }
+        
+        
+        
+    }
+    
     func dump() {
         var tmpNode = dummy.next
         while tmpNode != nil {
