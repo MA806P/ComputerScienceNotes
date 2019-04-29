@@ -124,20 +124,6 @@ class List<Element: Equatable> {
         }
     }
     
-    //链表反转
-    func reverse() {
-        var reverseHead: Node<Element>?, currentNode: Node<Element>?, prevNode: Node<Element>?
-        
-        reverseHead = dummy
-        currentNode = reverseHead!.next
-        while currentNode == nil {
-            reverseHead = currentNode
-        }
-        
-        
-        
-    }
-    
     func dump() {
         var tmpNode = dummy.next
         while tmpNode != nil {
@@ -146,26 +132,76 @@ class List<Element: Equatable> {
         }
         print("list is empty: \(isEmpty). size: \(size)")
     }
+    
+    
+    //链表反转
+    func reverse() {
+        var reverseHead: Node<Element>?, currentNode: Node<Element>?, prevNode: Node<Element>?
+        
+        reverseHead = dummy
+        if reverseHead != nil {
+            currentNode = reverseHead!.next
+            if currentNode != nil {
+                prevNode = currentNode!.next
+                while prevNode != nil {
+                    currentNode!.next = prevNode!.next
+                    prevNode!.next = reverseHead!.next
+                    reverseHead!.next = prevNode
+                    
+                    prevNode = currentNode!.next
+                }
+            }
+        }
+    }
+    
+    //检测环
+    func hasCircle() -> Bool {
+        var fast = dummy.next
+        var slow: Node<Element>? = dummy
+        while fast != nil {
+            if fast === slow {
+                return true
+            }
+            fast = fast!.next?.next
+            slow = slow!.next
+        }
+        return false
+    }
+    
+    //中间节点
+    func halfNode() -> Node<Element>? {
+        var fast: Node<Element>? = dummy.next
+        var slow: Node<Element>? = dummy.next
+        
+        while fast?.next != nil, fast?.next?.next != nil {
+            fast = fast!.next?.next
+            slow = slow!.next
+        }
+        return slow
+    }
+    
 }
 
 
 let list = List<Int>()
 print("is empty \(list.isEmpty)")
-
 list.insertToHead(value: 3)
 list.insertToHead(value: 2)
 list.insertToHead(value: 1)
-
 let node1 = list.node(at: 1)
-list.insert(before: node1!, newValue: 8)
-
+list.insert(before: node1!, newValue: 0)
 let node2 = list.node(with: 3)
 list.insert(after: node2!, newValue: 4)
-
 list.dump()
 
+//let node3 = list.node(with: 8)
+//list.delete(node: node3!)
+//list.dump()
 
-let node3 = list.node(with: 8)
-list.delete(node: node3!)
+list.reverse()
 list.dump()
+
+print("list has circle: \(list.hasCircle())")
+
+print("half node: \(String(describing: list.halfNode()?.value))\n")
 
