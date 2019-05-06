@@ -143,6 +143,79 @@ struct listNode * middle(struct list *head)
 }
 
 
+//删除链表倒数第n个节点
+struct list * removeNodeFromEnd(struct list *head, int n)
+{
+    struct listNode *fast = head->head;
+    struct listNode *prev = NULL;
+    struct listNode *next = head->head;
+    
+    int k = n;
+    
+    while (k > 1 && fast != NULL) {
+        fast = fast->next;
+        k--;
+    }
+    
+    if (fast == NULL) {
+        return head;
+    }
+    
+    while (fast->next != NULL) {
+        fast = fast->next;
+        prev = next;
+        next = next->next;
+    }
+    
+    if (prev == NULL) {
+        head->head = head->head->next;
+    } else {
+        prev->next = prev->next->next;
+    }
+    return head;
+}
+
+
+//合并两个有序链表
+struct list mergeTwoList(struct list *head1, struct list *head2)
+{
+    struct list head = { NULL };
+    struct listNode tmpNode = { -1, NULL};
+    head.head = &tmpNode;
+    struct listNode *headNode = head.head;
+    
+    struct listNode *headNode1 = head1->head;
+    struct listNode *headNode2 = head2->head;
+    
+    while (1) {
+        if (headNode1 == NULL) {
+            headNode->next = headNode2;
+            break;
+        } else if (headNode2 == NULL) {
+            headNode->next = headNode1;
+            break;
+        }
+        
+        if (headNode1->value < headNode2->value) {
+            headNode->next = headNode1;
+            headNode1 = headNode1->next;
+        } else {
+            headNode->next = headNode2;
+            headNode2 = headNode2->next;
+        }
+        headNode = headNode->next;
+        
+        printf("loop \n");
+    }
+    
+    printf("\n *** end \n");
+    
+    return head;
+}
+
+
+
+
 int main()
 {
     struct list head = {NULL};
