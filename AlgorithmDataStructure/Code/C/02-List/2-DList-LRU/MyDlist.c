@@ -267,6 +267,89 @@ void LRU_list(LinkedList *list, ListNode *node) {
 }
 
 
+//删除链表倒数第n个节点
+void removeNodeFormEnd(LinkedList *list, int n) {
+    
+    if (list == NULL || n <= 0) {
+        return;
+    }
+    
+    ListNode **head = &(list->head);
+    if (*head == NULL) {
+        return;
+    }
+    
+    ListNode *fast = list->head;
+    ListNode *prev = NULL;
+    ListNode *next = list->head;
+    
+    int k = n;
+    while (k > 1 && fast != NULL) {
+        fast = fast->next;
+        k--;
+    }
+    
+    if (fast == NULL) {
+        return;
+    }
+    
+    while (fast->next != NULL) {
+        fast = fast->next;
+        
+        prev = next;
+        next = next->next;
+    }
+    
+    if (prev == NULL) {
+        *head = (*head)->next;
+    } else {
+        prev->next = next->next;
+    }
+}
+
+//合并两个有序链表
+ListNode * mergeTwoList(LinkedList *list1, LinkedList *list2) {
+    if (list1 == NULL || list1->head == NULL) {
+        return list2->head;
+    }
+    
+    if (list2 == NULL || list2 == NULL) {
+        return list1->head;
+    }
+    
+    ListNode *list1Node = list1->head;
+    ListNode *list2Node = list2->head;
+    
+    LinkedList mergeList = { NULL };
+    ListNode mergeHead = { -1, NULL };
+    mergeList.head = &mergeHead;
+    
+    ListNode *mergeListNode = mergeList.head;
+    
+    while (1) {
+        if (list1Node == NULL) {
+            mergeListNode->next = list2Node;
+            break;
+        } else if (list2Node == NULL) {
+            mergeListNode->next = list1Node;
+            break;
+        }
+        
+        if (list1Node->value < list2Node->value) {
+            mergeListNode->next = list1Node;
+            list1Node = list1Node->next;
+        } else {
+            mergeListNode->next = list2Node;
+            list2Node = list2Node->next;
+        }
+        mergeListNode = mergeListNode->next;
+    }
+    
+    return mergeList.head;
+}
+
+
+
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
