@@ -180,7 +180,32 @@ class List<Element: Equatable> {
         return slow
     }
     
+    //删除倒数第n个节点
+    func deleteLastNode(at lastNum: Int) {
+        var fast: Node<Element>? = dummy.next
+        var slow: Node<Element>? = dummy.next
+        var num = 0
+        while fast != nil, num < lastNum {
+            fast = fast!.next
+            num += 1
+        }
+        
+        var prevNode: Node<Element>?
+        while fast != nil {
+            prevNode = slow
+            fast = fast!.next
+            slow = slow!.next;
+        }
+        prevNode?.next = slow?.next
+    }
+    
 }
+
+
+////两个有序链表合并
+//func mergeSortedLists<Element: Comparable>(headA: Node<Element>?, headB: Node<Element>?) -> Node<Element>? {
+//
+//}
 
 
 let list = List<Int>()
