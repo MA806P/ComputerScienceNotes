@@ -182,8 +182,8 @@ class List<Element: Equatable> {
     
     //删除倒数第n个节点
     func deleteLastNode(at lastNum: Int) {
-        var fast: Node<Element>? = dummy.next
-        var slow: Node<Element>? = dummy.next
+        var fast: Node<Element>? = dummy
+        var slow: Node<Element>? = dummy
         var num = 0
         while fast != nil, num < lastNum {
             fast = fast!.next
