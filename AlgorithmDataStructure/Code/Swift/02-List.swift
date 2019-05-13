@@ -201,6 +201,47 @@ class List<Element: Equatable> {
     
 }
 
+func mergeTwoList(list1: List<Int>, list2: List<Int>) -> Node<Int>? {
+    guard list1.isEmpty else {
+        return list2
+    }
+    guard list2.isEmpty else {
+        return list1
+    }
+    
+    var head: Node<Int>?,  tail: Node<Int>?
+    var node1: Node<Int>? = list1.dummy.next
+    var node2: Node<Int>? = list2.dummy.next
+    
+    if node1!.value! < node2!.value! {
+        head = node1
+        node1 = node1!.next
+    } else {
+        head = node2
+        node2 = node2!.next
+    }
+    tail = head
+    
+    while node1 != nil, node2 != nil {
+        if node1!.value! < node2!.value! {
+            tail!.next = node1
+            node1 = node1!.next
+        } else {
+            tail!.next = node2
+            node2 = node2!.next
+        }
+        tail = tail!.next
+    }
+    
+    if node1 != nil {
+        tail?.next = node1
+    } else {
+        tail?.next = node2
+    }
+    
+    return head
+}
+
 
 ////两个有序链表合并
 //func mergeSortedLists<Element: Comparable>(headA: Node<Element>?, headB: Node<Element>?) -> Node<Element>? {
