@@ -13,7 +13,7 @@ class Node<T> {
 
 class List<Element: Equatable> {
     
-    private var dummy = Node<Element>() //哨兵结点
+    var dummy = Node<Element>() //哨兵结点
     
     var size: Int {
         var num = 0
@@ -201,19 +201,21 @@ class List<Element: Equatable> {
     
 }
 
+
+//合并两个有序链表
 func mergeTwoList(list1: List<Int>, list2: List<Int>) -> Node<Int>? {
-    guard list1.isEmpty else {
-        return list2
+    guard !list1.isEmpty else {
+        return list2.dummy.next
     }
-    guard list2.isEmpty else {
-        return list1
+    guard !list2.isEmpty else {
+        return list1.dummy.next
     }
     
     var head: Node<Int>?,  tail: Node<Int>?
     var node1: Node<Int>? = list1.dummy.next
     var node2: Node<Int>? = list2.dummy.next
     
-    if node1!.value! < node2!.value! {
+    if node1!.value! <= node2!.value! {
         head = node1
         node1 = node1!.next
     } else {
@@ -223,7 +225,7 @@ func mergeTwoList(list1: List<Int>, list2: List<Int>) -> Node<Int>? {
     tail = head
     
     while node1 != nil, node2 != nil {
-        if node1!.value! < node2!.value! {
+        if node1!.value! <= node2!.value! {
             tail!.next = node1
             node1 = node1!.next
         } else {
@@ -243,31 +245,44 @@ func mergeTwoList(list1: List<Int>, list2: List<Int>) -> Node<Int>? {
 }
 
 
-////两个有序链表合并
-//func mergeSortedLists<Element: Comparable>(headA: Node<Element>?, headB: Node<Element>?) -> Node<Element>? {
-//
-//}
 
 
 let list = List<Int>()
 print("is empty \(list.isEmpty)")
+list.insertToHead(value: 9)
+list.insertToHead(value: 6)
 list.insertToHead(value: 3)
-list.insertToHead(value: 2)
-list.insertToHead(value: 1)
 let node1 = list.node(at: 1)
-list.insert(before: node1!, newValue: 0)
+list.insert(before: node1!, newValue: 1)
 let node2 = list.node(with: 3)
-list.insert(after: node2!, newValue: 4)
+list.insert(after: node2!, newValue: 5)
 list.dump()
 
 //let node3 = list.node(with: 8)
 //list.delete(node: node3!)
 //list.dump()
 
-list.reverse()
-list.dump()
+//list.reverse()
+//list.dump()
 
-print("list has circle: \(list.hasCircle())")
+//print("list has circle: \(list.hasCircle())")
+//print("half node: \(String(describing: list.halfNode()?.value))\n")
 
-print("half node: \(String(describing: list.halfNode()?.value))\n")
+//list.deleteLastNode(at: 0)
+//list.dump()
 
+
+
+let list2 = List<Int>()
+list2.insertToHead(value: 8)
+list2.insertToHead(value: 4)
+list2.insertToHead(value: 2)
+list2.insertToHead(value: 0)
+list2.dump()
+
+print("\n**************\n")
+var node = mergeTwoList(list1: list, list2: list2)
+while node != nil {
+    print("\(String(describing: node!.value))")
+    node = node!.next
+}
