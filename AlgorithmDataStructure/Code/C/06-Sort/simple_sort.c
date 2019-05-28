@@ -25,6 +25,8 @@ void dump(int a[], int size) {
     return;
 }
 
+
+//冒泡排序
 void bubble_sort(int a[], int size) {
     if (size <= 1) { return; }
     int i = 0, j = 0, swap_flag = 0;
@@ -61,6 +63,7 @@ void my_bubble_sort(int a[], int size) {
     return;
 }
 
+//插入排序
 void insert_sort(int a[], int size) {
     if (size <= 1) { return; }
     int i = 0, j = 0, key = 0;
@@ -83,6 +86,7 @@ void insert_sort(int a[], int size) {
     return;
 }
 
+//选择排序
 void select_sort(int a[], int size) {
     if (size <= 1) {
         return;
@@ -107,12 +111,13 @@ void select_sort(int a[], int size) {
 
 //--------------------------------
 
+//归并排序
 void merge(int a[], int p, int q, int r) {
     int *tmp = malloc(sizeof(int) * (r - p + 1));
     if (!tmp) {
         abort();
     }
-    
+    //合并两个分区的数组
     int i = p, j = q + 1, k = 0;
     while (i <= q && j <= r) {
         if (a[i] <= a[j]) {
@@ -122,6 +127,8 @@ void merge(int a[], int p, int q, int r) {
         }
     }
     
+    //两个分区的数组长度可能不同，有一个数组遍历完了
+    //然后下面将长的数组添加到后面
     if (i == q + 1) {
         while (j <= r) {
             tmp[k++] = a[j++];
@@ -131,7 +138,7 @@ void merge(int a[], int p, int q, int r) {
             tmp[k++] = a[i++];
         }
     }
-    
+    //将排序好的数组，复制到原来的数组上
     memcpy(a + p, tmp, (r - p + 1) * sizeof(int));
     free(tmp);
 }
@@ -140,7 +147,8 @@ void merge_sort(int a[], int p, int r) {
     if (p >= r) {
         return;
     }
-    
+    //将数组一分为二，直到只有1个元素
+    //然后合并两个有序数组，递归
     int q = (p + r) / 2;
     merge_sort(a, p, q);
     merge_sort(a, q + 1, r);
@@ -151,6 +159,57 @@ void merge_sort_size(int a[], int size) {
     merge_sort(a, 0, size - 1);
 }
 
+
+
+//--------------------------------
+
+//快速排序
+
+void swap_array(int *a, int *b) {
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+int partition(int *arr, int p, int r) {
+    int i, j;
+    i = j = p;
+    
+    //选择最后一个作为分界点，分界点前的都是比分界点小的，后面都是大的。
+    //为了不消耗空间，而且保证原地排序，下面的方法很巧妙，交换
+    for(; j < r; j++) {
+        if (arr[j] < arr[r]) {
+            if (i != j) {
+                swap_array(arr + i, arr + j);
+            }
+            i++;
+        }
+    }
+    swap_array(arr + i, arr + r);
+    return i;
+}
+
+
+//快排的思想，选择一个元素，一般都是最后一个，作为分界点，分界点前的都是比分界点小的，后面都是大的。
+//然后子分区，继续选择分界点继续分，知道只有一个元素
+void quick_sort(int *arr, int p, int r) {
+    int q;
+    if (p >= r) {
+        return;
+    }
+    q = partition(arr, p, r);
+    quick_sort(arr, p, q - 1);
+    quick_sort(arr, q + 1, r);
+}
+
+void quick_sort_size(int *arr, int size) {
+    quick_sort(arr, 0, size - 1);
+}
+
+
+
+
+//--------------------------------
 
 
 
@@ -219,26 +278,51 @@ int main(int argc, const char * argv[]) {
     
 //--------------------------------
     
+//    //归并排序
+//    int testa1[200][2000];
+//    int i = 0, j = 0;
+//    for (i = 0; i < 200; i++) {
+//        for (j = 0; j < 2000; j++) {
+//            int value = arc4random() % 100000;
+//            testa1[i][j] = value + 1;
+//        }
+//    }
+//
+//    clock_t start1, end1;
+//    double cpu_time_used;
+//    start1 = clock();
+//    for (i = 0; i < 200; i++) {
+//        merge_sort_size(testa1[i], 2000);
+//    }
+//    end1 = clock();
+//    cpu_time_used = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
+//    printf("---------4 = %.8lf\n", cpu_time_used);
+//    //---------4 = 0.07637700
     
-    int testa1[200][2000];
-    int i = 0, j = 0;
-    for (i = 0; i < 200; i++) {
-        for (j = 0; j < 2000; j++) {
-            int value = arc4random() % 100000;
-            testa1[i][j] = value + 1;
-        }
-    }
     
-    clock_t start1, end1;
-    double cpu_time_used;
-    start1 = clock();
-    for (i = 0; i < 200; i++) {
-        merge_sort_size(testa1[i], 2000);
-    }
-    end1 = clock();
-    cpu_time_used = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
-    printf("---------4 = %.8lf\n", cpu_time_used);
-    //---------4 = 0.07637700
+    
+//--------------------------------
+    
+//    //快速排序
+//    int testa1[200][2000];
+//    int i = 0, j = 0;
+//    for (i = 0; i < 200; i++) {
+//        for (j = 0; j < 2000; j++) {
+//            int value = arc4random() % 100000;
+//            testa1[i][j] = value + 1;
+//        }
+//    }
+//
+//    clock_t start1, end1;
+//    double cpu_time_used;
+//    start1 = clock();
+//    for (i = 0; i < 200; i++) {
+//        quick_sort_size(testa1[i], 2000);
+//    }
+//    end1 = clock();
+//    cpu_time_used = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
+//    printf("---------5 = %.8lf\n", cpu_time_used);
+//    //---------5 = 0.04064800
     
     
     
