@@ -8,7 +8,7 @@ int binary_search_i(int a[], int size, int value) {
     while (low <= high) {
         
         mid = (low + high) / 2;
-        // 防止size数量太大是，（left + right）数据翻转，导致问题
+        // 防止size数量太大时，（left + right）可能溢出，导致问题
         //mid = low + (high - low) / 2;
         //mid = low + ((high - low)>>1);
         
