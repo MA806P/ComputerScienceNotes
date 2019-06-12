@@ -1,6 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+int binary_search(int a[], int size, int value) {
+    int low = 0, high = size - 1, mid;
+    while (low <= high) {
+        mid = low + ((high - low) >> 1);
+        if (a[mid] < value) {
+            low = mid + 1;
+        } else if (a[mid] > value) {
+            high = mid - 1;
+        } else {
+            return mid;
+        }
+    }
+    return -1;
+}
+
+
 /* 查找第一个等于给定数值的元素 */
 int binary_search_first_one(int a[], int size, int value) {
     int low = 0, high = size - 1, mid;
@@ -43,6 +60,28 @@ int binary_search_first_one2(int a[], int size, int value) {
     }
 }
 
+//递归，二分查找第一个给定数值的元素
+int binary_search_first_one_r(int a[], int size, int value) {
+    if (size <= 0) { return -1; }
+    
+    int idx, mid = size/2;
+    if (a[mid] == value) {
+        idx = binary_search_first_one_r(a, mid, value);
+        //如果中间值就是，不确定前一个是否重复，再次的缩小范围查找
+        return idx != -1 ? idx : mid;
+    }
+    
+    if (!mid) { return -1; }
+    
+    if (a[mid] < value) {
+        idx = binary_search_first_one_r(a + mid + 1, size - mid - 1, value);
+        if (idx != -1) { idx += mid + 1;}
+    } else {
+        idx = binary_search_first_one_r(a, mid , value);
+    }
+    return idx;
+}
+
 
 /* 查找最后一个等于给定数值的元素 */
 int binary_search_last_one(int a[], int size, int value) {
@@ -66,6 +105,29 @@ int binary_search_last_one(int a[], int size, int value) {
     return -1;
 }
 
+//递归，二分查找最后一个给定数值的元素
+int binary_search_last_one_r(int a[], int size, int value) {
+    if (size <= 0) { return -1; }
+    
+    int idx, mid = size/2;
+    if (a[mid] == value) {
+        idx = binary_search_last_one_r(a + mid + 1, size - mid - 1, value);
+        //如果中间值就是，不确定后一个是否重复，再次的缩小范围查找
+        return idx != -1 ? mid + idx + 1 : mid;
+    }
+    
+    if (!mid) { return -1; }
+    
+    if (a[mid] < value) {
+        idx = binary_search_last_one_r(a + mid + 1, size - mid - 1, value);
+        if (idx != -1) { idx += mid + 1;}
+    } else {
+        idx = binary_search_last_one_r(a, mid , value);
+    }
+    return idx;
+}
+
+
 /* 查找第一个大于等于给定数值的元素 */
 int binary_search_first_big(int a[], int size, int value) {
     int low = 0, high = size - 1, mid;
@@ -84,6 +146,24 @@ int binary_search_first_big(int a[], int size, int value) {
     }
     return -1;
 }
+
+////递归，二分查找第一个大于等于给定数值的元素
+//int binary_search_first_big_r(int a[], int size, int value) {
+//    if (size <= 0) { return -1; }
+//
+//    int idx, mid = size/2;
+//    printf("\n a[%d]=%d %d ---", mid, a[mid], idx);
+//    if (a[mid] >= value) {
+//        idx = binary_search_first_big_r(a, mid, value);
+//        //如果中间值就是大于等于，不确定前一个是否也大于等于，要缩小区间继续
+//        if (idx == -1) { idx = mid; }
+//    } else {
+//        idx = binary_search_first_big_r(a + mid + 1, size - mid - 1, value);
+//        if (idx != -1) { idx += mid + 1; }
+//    }
+//    printf(" %d %d \n", mid, idx);
+//    return idx;
+//}
 
 
 /* 查找最后一个小于等于给定数值的元素 */
@@ -110,11 +190,13 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
     
-    
-    int a[10] = {5,6,6,9,10,11,11,22,33,33};
-    //int a[10] = {0,1,2,3,4,5,6,7,8,9};
-    //int a[10] = {0};
-    int b = binary_search_last_small(a, 10, 9);
-    printf("\n ------%d------ \n", b);
+//    int a[10] = {5,6,6,9,10,11,11,22,33,33};
+//    //int a[10] = {0,1,2,3,4,5,6,7,8,9};
+//    int a2[10] = {0};
+//    int b = binary_search_first_big_r(a, 10, 6);
+//    int b2 = binary_search_first_big_r(a, 10, 11);
+//    int b3 = binary_search_first_big_r(a, 10, 33);
+//    int b4 = binary_search_first_big_r(a2, 10, 0);
+//    printf("\n ------%d %d %d %d------ \n", b,b2,b3,b4);
     return 0;
 }
