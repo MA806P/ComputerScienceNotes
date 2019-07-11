@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #define MAX_LEVEL 15
 
@@ -48,6 +49,10 @@ int random_level(void) {
     return level;
 }
 
+void random_level_test () {
+    printf(" %d %d %d %d %d %d\n", random_level(), random_level(), random_level(), random_level(), random_level(), random_level());
+}
+
 
 
 void insert(struct skip_list *sl, int val) {
@@ -90,6 +95,7 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
     
+    random_level_test();
     
     return 0;
 }
