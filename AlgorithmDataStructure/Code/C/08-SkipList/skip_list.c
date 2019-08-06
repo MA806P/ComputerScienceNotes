@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -49,11 +50,6 @@ int random_level(void) {
     return level;
 }
 
-void random_level_test () {
-    printf(" %d %d %d %d %d %d\n", random_level(), random_level(), random_level(), random_level(), random_level(), random_level());
-}
-
-
 
 void insert(struct skip_list *sl, int val) {
     int level = random_level();
@@ -86,16 +82,90 @@ void insert(struct skip_list *sl, int val) {
     if (sl->max_level < level) {
         sl->max_level = level;
         sl->max_level_nodes = 1;
-    } else if (sl->max_level == level)
+    } else if (sl->max_level == level) {
         sl->max_level_nodes++;
+    }
+    
 }
+
+
+void print_sl(struct skip_list *sl) {
+    struct node *node;
+    int level;
+    
+    printf("%d level skip list with %d nodes on top\n", sl->max_level, sl->max_level_nodes);
+    
+    for (level = sl->max_level - 1; level >= 0; level--) {
+        node = &sl->head;
+        printf("level[%02d]:", level);
+        while (node->forward[level]) {
+            printf("%4d", node->forward[level]->val);
+            node = node->forward[level];
+        }
+        printf("\n");
+    }
+}
+
+
+
+struct node *find(struct skip_list *sl, int val) {
+    struct node *node = &sl->head;
+    int i;
+    
+    for (i = sl->max_level - 1; i >= 0; i--) {
+        while (node->forward[i] && node->forward[i]->val < val) {
+            node = node->forward[i];
+        }
+    }
+    
+    if (node->forward[0] && node->forward[0]->val == val) {
+        return node->forward[0];
+    } else {
+        return NULL;
+    }
+}
+
 
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
     
-    random_level_test();
+    //printf(" %d %d %d %d %d %d\n", random_level(), random_level(), random_level(), random_level(), random_level(), random_level());
+    
+    struct skip_list sl;
+    int i;
+    
+    skip_list_init(&sl);
+    print_sl(&sl);
+    
+    for (i = 0; i < 10; i++) {
+        insert(&sl, i);
+    }
+    print_sl(&sl);
+    
+    /*
+     11 level skip list with 1 nodes on top
+     level[10]:   9
+     level[09]:   3   9
+     level[08]:   3   8   9
+     level[07]:   3   7   8   9
+     level[06]:   1   3   5   7   8   9
+     level[05]:   1   2   3   4   5   6   7   8   9
+     level[04]:   1   2   3   4   5   6   7   8   9
+     level[03]:   1   2   3   4   5   6   7   8   9
+     level[02]:   1   2   3   4   5   6   7   8   9
+     level[01]:   0   1   2   3   4   5   6   7   8   9
+     level[00]:   0   1   2   3   4   5   6   7   8   9
+     */
+    
+    
+    struct node *node = find(&sl, 8);
+    if (node) {
+        printf("find 8 in sl %d\n", node->val);
+    } else {
+        printf("8 not in sl\n");
+    }
     
     return 0;
 }
