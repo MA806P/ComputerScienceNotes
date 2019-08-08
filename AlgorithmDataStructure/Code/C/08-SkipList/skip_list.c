@@ -72,6 +72,7 @@ void insert(struct skip_list *sl, int val) {
             p = p->forward[i];
         }
         update[i] = p;
+        //printf("--%d\n", p->val);
     }
     
     for (i = 0; i < level; i++) {
@@ -107,7 +108,6 @@ void print_sl(struct skip_list *sl) {
 }
 
 
-
 struct node *find(struct skip_list *sl, int val) {
     struct node *node = &sl->head;
     int i;
@@ -122,6 +122,54 @@ struct node *find(struct skip_list *sl, int val) {
         return node->forward[0];
     } else {
         return NULL;
+    }
+}
+
+
+void delete(struct skip_list* sl, int val)
+{
+    struct node *update[MAX_LEVEL];
+    struct node *p;
+    int i;
+    
+    p = &sl->head;
+    
+    for (i = sl->max_level; i >= 0; i--) {
+        while (p->forward[i] && p->forward[i]->val < val)
+            p = p->forward[i];
+        
+        update[i] = p;
+    }
+    
+    if (p->forward[0] == NULL || p->forward[0]->val != val)
+        return;
+    
+    if (p->forward[0]->max_level == sl->max_level)
+        sl->max_level_nodes--;
+    
+    for (i = sl->max_level-1; i >= 0; i--) {
+        if (update[i]->forward[i] && update[i]->forward[i]->val == val)
+            update[i]->forward[i] = update[i]->forward[i]->forward[i];
+    }
+    
+    // fixup max_level and max_level_nodes
+    if (sl->max_level_nodes == 0) {
+        //sl->max_level--;
+        p = &sl->head;
+        // skip (max_level - 1), direct test (max_level - 2)
+        // since no nodes on (max_level - 1)
+        for (i = sl->max_level - 2; i >= 0; i--) {
+            while (p->forward[i]) {
+                sl->max_level_nodes++;
+                p = p->forward[i];
+            }
+            
+            if (sl->max_level_nodes) {
+                sl->max_level = i + 1;
+                break;
+            } else
+                sl->max_level = i;
+        }
     }
 }
 
@@ -143,29 +191,42 @@ int main(int argc, const char * argv[]) {
         insert(&sl, i);
     }
     print_sl(&sl);
-    
     /*
-     11 level skip list with 1 nodes on top
-     level[10]:   9
-     level[09]:   3   9
-     level[08]:   3   8   9
-     level[07]:   3   7   8   9
-     level[06]:   1   3   5   7   8   9
-     level[05]:   1   2   3   4   5   6   7   8   9
-     level[04]:   1   2   3   4   5   6   7   8   9
-     level[03]:   1   2   3   4   5   6   7   8   9
-     level[02]:   1   2   3   4   5   6   7   8   9
+     level[10]:   3   7
+     level[09]:   3   7
+     level[08]:   3   4   7
+     level[07]:   3   4   5   6   7
+     level[06]:   0   1   3   4   5   6   7
+     level[05]:   0   1   3   4   5   6   7   9
+     level[04]:   0   1   3   4   5   6   7   8   9
+     level[03]:   0   1   2   3   4   5   6   7   8   9
+     level[02]:   0   1   2   3   4   5   6   7   8   9
      level[01]:   0   1   2   3   4   5   6   7   8   9
      level[00]:   0   1   2   3   4   5   6   7   8   9
      */
     
+    struct node *node = find(&sl, 5);
+    if (node)
+        printf("find %d\n", node->val);
+    else
+        printf("not in\n");
     
-    struct node *node = find(&sl, 8);
-    if (node) {
-        printf("find 8 in sl %d\n", node->val);
-    } else {
-        printf("8 not in sl\n");
-    }
+    
+    delete(&sl, 5);
+    print_sl(&sl);
+    /*
+     level[10]:   3   7
+     level[09]:   3   7
+     level[08]:   3   4   7
+     level[07]:   3   4   6   7
+     level[06]:   0   1   3   4   6   7
+     level[05]:   0   1   3   4   6   7   9
+     level[04]:   0   1   3   4   6   7   8   9
+     level[03]:   0   1   2   3   4   6   7   8   9
+     level[02]:   0   1   2   3   4   6   7   8   9
+     level[01]:   0   1   2   3   4   6   7   8   9
+     level[00]:   0   1   2   3   4   6   7   8   9
+     */
     
     return 0;
 }
