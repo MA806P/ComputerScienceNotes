@@ -74,6 +74,26 @@ void skip_list_destory(skipList *list) {
     return;
 }
 
+// 遍历
+void skip_list_dump(skipList *list) {
+    
+    node *ptmp = NULL;
+    int i = 0;
+    
+    printf("--------------\n");
+    printf("skip list level[%d], count[%d]\n", list->level, list->count);
+    
+    for (i = list->level - 1; i >= 0; i--) {
+        ptmp = list->head->next[i];
+        printf("level[%d]:", i);
+        while (ptmp != NULL) {
+            printf("%d - %d\n", ptmp->key, ptmp->value);
+            ptmp = ptmp->next[i];
+        }
+    }
+    printf("\r\n--------------\n");
+}
+
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
