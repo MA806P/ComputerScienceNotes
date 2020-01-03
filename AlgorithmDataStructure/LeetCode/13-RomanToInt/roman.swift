@@ -1,24 +1,10 @@
 
 class Solution {
-    func romanCharToInt(_ char: String) -> Int {
-        var r: Int
-        switch char {
-            case "I": r = 1
-            case "V": r = 5
-            case "X": r = 10
-            case "L": r = 50
-            case "C": r = 100
-            case "D": r = 500
-            case "M": r = 1000
-            default: r = 0
-        }
-        return r;
-    }
-    
     func romanToInt(_ s: String) -> Int {
+        let map = ["I":1, "V": 5, "X": 10, "L":50, "C":100, "D" :500, "M":1000]
         var sum = 0, preInt = 0, currentInt = 0;
         for i in s.enumerated() {
-            currentInt = romanCharToInt("\(i.element)")
+            currentInt = map["\(i.element)"] ?? 0
             if currentInt > preInt {
                 sum += currentInt - preInt * 2
             } else {
