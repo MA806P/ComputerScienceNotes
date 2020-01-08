@@ -80,6 +80,7 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2){
         l2 = l2 ? l2->next : NULL;
     }
     
+    //这里要注意有进位的情况
     if (flag == 1) {
         struct ListNode *node = malloc(sizeof(struct ListNode));
         node -> next = NULL;
