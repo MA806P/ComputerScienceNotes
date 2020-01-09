@@ -37,7 +37,7 @@ memset() 函数用来将指定内存的前n个字节设置为特定的值：
 	value 为要设置的值。可以向 value 传递 int 类型的值，也可以传递 char 类型的值，int 和 char 可以根据 ASCII 码相互转换。
 	num 为 ptr 的前 num 个字节，size_t 就是unsigned int。   
 	
-	   
+	  
 	   
 7、abort()  
 C 库函数 void abort(void) 终止程序执行，直接从调用的地方跳出。  
@@ -54,6 +54,11 @@ void srand(unsigned seed);
 
 
 
-
+字符串
+1、字符串截取
+char dest[4] = "";
+char src[] = "123456789";
+strncpy(dest, src+3, 3);
+puts(dest); //456
 
 
