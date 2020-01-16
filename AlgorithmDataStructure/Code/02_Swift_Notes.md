@@ -65,3 +65,18 @@ test[10...].string  // "🇺🇸!!! Hello Brazil 🇧🇷!!!"
 
 
 "\(s[s.index(s.startIndex, offsetBy: start) ... s.index(s.startIndex, offsetBy: end)])"
+
+
+4、字符串单个字符获取  
+```
+let greeting = "Guten Tag!"
+greeting[greeting.startIndex]
+// G
+greeting[greeting.index(before: greeting.endIndex)]
+// !
+greeting[greeting.index(after: greeting.startIndex)]
+// u
+let index = greeting.index(greeting.startIndex, offsetBy: 7)
+greeting[index]
+// a
+```

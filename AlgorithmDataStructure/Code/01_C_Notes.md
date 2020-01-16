@@ -61,4 +61,20 @@ char src[] = "123456789";
 strncpy(dest, src+3, 3);
 puts(dest); //456
 
+2、字符串比较
+    char *a = "ad";
+    char *b = "ad";
+    printf("%d", strcmp(a, b));
+    // ab ac -1
+    // ad ac 1
+    // ad ad 0
+
+3、字符串拼接
+    char *a = "ab";
+    char *b = "ac";
+    char *c = malloc(10 * sizeof(char));
+    strcpy(c, a);
+    strcat(c, b);
+    printf("%s\n", c); //abac
+
 
