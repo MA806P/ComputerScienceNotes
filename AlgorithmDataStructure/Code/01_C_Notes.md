@@ -43,6 +43,16 @@ memset() 函数用来将指定内存的前n个字节设置为特定的值：
 C 库函数 void abort(void) 终止程序执行，直接从调用的地方跳出。  
 
 
+8、realloc：
+函数简介
+　　原型：extern void *realloc(void *mem_address, unsigned int newsize);
+　　语法：指针名=（数据类型*）realloc（要改变内存大小的指针名，新的大小）。//新的大小一定要大于原来的大小不然的话会导致数据丢失！
+　　头文件：#include <stdlib.h> 有些编译器需要#include <malloc.h>，在TC2.0中可以使用alloc.h头文件
+　　功能：先判断当前的指针是否有足够的连续空间，如果有，扩大mem_address指向的地址，并且将mem_address返回，如果空间不够，先按照newsize指定的大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来mem_address所指内存区域，同时返回新分配的内存区域的首地址。即重新分配存储器块的地址。
+　　返回值：如果重新分配成功则返回指向被分配内存的指针，否则返回空指针NULL。　
+　　注意：这里原始内存中的数据还是保持不变的。当内存不再使用时，应使用free()函数将内存块释放。
+
+
 
 
 8、srandom((unsigned int)time(NULL));  
