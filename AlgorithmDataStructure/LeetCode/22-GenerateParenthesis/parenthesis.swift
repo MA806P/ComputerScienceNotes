@@ -54,10 +54,12 @@ class Solution {
     
     func backtrack(_ ans: inout [String], _ cur: String, _ open: Int, _ close: Int, _ max: Int) {
         if cur.count == max * 2 {
+            print(cur)
             ans.append(cur)
             return;
         }
 
+        print(ans, cur, open, close, max)
         if open < max {
             backtrack(&ans, cur+"(", open+1, close, max)
         }
