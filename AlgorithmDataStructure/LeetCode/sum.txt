@@ -13,9 +13,147 @@
 
 
 树，遍历
-题目：22(括号生成)  
+搜索
+回溯
+题目：22(括号生成)  39(组合总和)
 
 
 
 二分查找
 题目：33(搜素旋转排序数组) 34(在排序数组中查找元素的第一个和最后一个位置)
+
+
+
+
+
+
+分类：
+1、数组中找和 = target。
+	1-数组中找两个元素和
+	15-数组中找三个元素和  16-三个元素和最接近 target
+	18-数组中找四个元素和
+	39-数组中找到和为target的所有组合
+
+
+
+
+
+c ------
+
+
+//链表
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
+
+void dump(struct ListNode *head) {
+    if (head == NULL) { printf("list null! \n"); }
+    struct ListNode *node = head;
+    while (node != NULL) {
+        printf("%d -> ", node->val);
+        node = node -> next;
+    }
+    printf("\n");
+}
+ struct ListNode l1 = {1, NULL};
+ struct ListNode l2 = {2, &l1};
+ struct ListNode l3 = {3, &l2};
+ struct ListNode l4 = {4, &l3};
+ struct ListNode l5 = {5, &l4};
+ struct ListNode l6 = {6, &l5};
+ dump(&l6);
+
+
+
+//栈
+#define listStackIsEmpty(stack) (stack->next == NULL)
+typedef struct _list_stack {
+    char data;
+    struct _list_stack *next;
+}listStack;
+listStack *listStackCreate() {
+    listStack *stack = NULL;
+    stack = (listStack *)malloc(sizeof(listStack));
+    if (stack == NULL) { return NULL; }
+    stack->next = NULL;
+    return stack;
+}
+void listStackDestroy(listStack *stack) {
+    listStack *tmpStack = NULL;
+    while (!listStackIsEmpty(stack)) {
+        tmpStack = stack->next;
+        stack->next = tmpStack->next;
+        free(tmpStack);
+    }
+    free(stack);
+    return; 
+}
+bool listStackPush(listStack *stack, char data) {
+    listStack *node = (listStack *)malloc(sizeof(listStack));
+    if (node == NULL) { return false; }
+    node->data = data;
+    node->next = stack->next;
+    stack->next = node;
+    return true;
+}
+char listStackPop(listStack *stack) {
+    if (listStackIsEmpty(stack)) { return '0'; }
+    char data;
+    listStack *next = stack->next;
+    data = next->data;
+    stack->next = next->next;
+    free(next);
+    return data;
+}
+void listStackDump(listStack *stack) {
+    if (listStackIsEmpty(stack)) {
+        printf("stack is empty \n");
+        return;
+    }
+    listStack *next = stack->next;
+    while (next != NULL) {
+        printf("data = %c\n", next->data);
+        next = next -> next;
+    }
+    return;
+}
+
+
+
+//排序
+
+//快速排序
+//选择一元素(一般是最后一个)作为分界点，分界点前比它小，后面都是比它大的
+//然后子分区继续这样分，直到最后只有一个元素
+void swap_item(int *a, int *b) { int temp = *a; *a = *b; *b = temp; }
+int partition(int *array, int p, int r) {
+    int i = p;
+    for (int j = p; j < r; j++) {
+        if (array[j] < array[r]) {
+            if (i != j) { swap_item(array + i, array + j); }
+            i++;
+        }
+    }
+    swap_item(array + i, array + r);
+    return i;
+}
+void quick_sort(int *array, int p, int r) {
+    if (p >= r) { return; }
+    int q = partition(array, p, r);
+    quick_sort(array, p, q - 1);
+    quick_sort(array, q + 1, r);
+}
+
+
+
+
+
+
+
+swift ------
+
+
+
+
+
