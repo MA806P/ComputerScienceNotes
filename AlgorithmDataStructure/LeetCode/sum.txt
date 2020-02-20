@@ -32,7 +32,7 @@
 	1-数组中找两个元素和
 	15-数组中找三个元素和  16-三个元素和最接近 target
 	18-数组中找四个元素和
-	39-数组中找到和为target的所有组合
+	39 40 - 数组中找到和为target的所有组合
 
 
 
@@ -66,57 +66,56 @@ void dump(struct ListNode *head) {
 
 
 
+
 //栈
-#define listStackIsEmpty(stack) (stack->next == NULL)
+typedef int  DATATYPE;
 typedef struct _list_stack {
-    char data;
+    DATATYPE data;
+    int count;
     struct _list_stack *next;
-}listStack;
-listStack *listStackCreate() {
-    listStack *stack = NULL;
-    stack = (listStack *)malloc(sizeof(listStack));
-    if (stack == NULL) { return NULL; }
-    stack->next = NULL;
-    return stack;
+} stack;
+stack *stackCreate() {
+    stack *s = (stack *)malloc(sizeof(stack));
+    if (s == NULL) { return NULL; }
+    s->next = NULL;
+    s->count = 0;
+    return s;
 }
-void listStackDestroy(listStack *stack) {
-    listStack *tmpStack = NULL;
-    while (!listStackIsEmpty(stack)) {
-        tmpStack = stack->next;
-        stack->next = tmpStack->next;
-        free(tmpStack);
+void stackDestroy(stack *s) {
+    stack *tempS = NULL;
+    while (s->next != NULL) {
+        tempS = s->next;
+        s->next = tempS->next;
+        free(tempS);
     }
-    free(stack);
-    return; 
+    free(s);
 }
-bool listStackPush(listStack *stack, char data) {
-    listStack *node = (listStack *)malloc(sizeof(listStack));
-    if (node == NULL) { return false; }
+void stackPush(stack *s, DATATYPE data) {
+    stack *node = (stack *)malloc(sizeof(stack));
+    if (node == NULL) { return; }
+    s->count += 1;
     node->data = data;
-    node->next = stack->next;
-    stack->next = node;
-    return true;
+    node->count = s->count;
+    node->next = s->next;
+    s->next = node;
 }
-char listStackPop(listStack *stack) {
-    if (listStackIsEmpty(stack)) { return '0'; }
-    char data;
-    listStack *next = stack->next;
-    data = next->data;
-    stack->next = next->next;
+DATATYPE stackPop(stack *s) {
+    if (s->next == NULL) { return 0; }
+    stack *next = s->next;
+    DATATYPE data = next->data;
+    s->count -= 1;
+    s->next = next->next;
     free(next);
     return data;
 }
-void listStackDump(listStack *stack) {
-    if (listStackIsEmpty(stack)) {
-        printf("stack is empty \n");
-        return;
-    }
-    listStack *next = stack->next;
+void stackDump(stack *s) {
+    if (s->next == NULL) { printf("stack empty!\n"); return; }
+    stack *next = s->next;
     while (next != NULL) {
-        printf("data = %c\n", next->data);
-        next = next -> next;
+        printf("-> %d ", next->data);
+        next = next->next;
     }
-    return;
+    printf("\n");
 }
 
 

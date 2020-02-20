@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 //快速排序
 void swap_item(int *a, int *b) { int temp = *a; *a = *b; *b = temp; }
 int partition(int *array, int p, int r) {
@@ -82,21 +81,26 @@ void dfs(int* candidates, int candidatesSize, int target, int* returnSize, int**
         int *columns = (int *)malloc(sizeof(int) * count);
         stack *node = s->next;
         for (int i = count - 1; i >= 0; i--) {
+            //printf("%d -> ", node->data);
             columns[i] = node->data;
             node = node->next;
         }
         result[*returnSize] = columns;
         (*returnColumnSizes)[*returnSize] = count;
+        //printf("--- %d %d \n", count, *returnSize);
         (*returnSize) += 1;
         return;
     }
     
     //printf("target = %d, i = %d \n", target, index);
     for (int i = index; i < candidatesSize; i++) {
+        //剪枝，和超过 target 了
         if (target < candidates[i]) { break; }
+        //printf("in  %d - %d \n", i, candidates[i]);
         stackPush(s, candidates[i]);
-        //printf("%d - %d \n", i, candidates[i]);
+        //这里把i传过去，是防止出现重复的现象。画图可帮助理解，数组排序后从i开始遍历保证分支上的数值比上层的大
         dfs(candidates, candidatesSize, target - candidates[i], returnSize, returnColumnSizes, s, result, i);
+        //printf("out %d - %d \n",i, stackPop(s));
         stackPop(s);
     }
     
@@ -124,11 +128,10 @@ int** combinationSum(int* candidates, int candidatesSize, int target, int* retur
 
 int main(int argc, const char * argv[]) {
     
-    int candidates[] = {2,3,5,7};
-    
+    int candidates[] = {2,3,6,7};
     int returnSize = 0;
     int *returnColumnSizes;
-    int **res = combinationSum(candidates, 4, 8, &returnSize, &returnColumnSizes);
+    int **res = combinationSum(candidates, 4, 7, &returnSize, &returnColumnSizes);
     
     for (int n = 0; n < returnSize; n++) {
         int *column = res[n];
@@ -138,12 +141,8 @@ int main(int argc, const char * argv[]) {
         }
         printf("\n");
     }
-    
-    
     return 0;
 }
-
-
 
 
 
