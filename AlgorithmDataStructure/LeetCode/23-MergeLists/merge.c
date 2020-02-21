@@ -1,6 +1,6 @@
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 struct ListNode {
     int val;
@@ -17,7 +17,7 @@ void dump(struct ListNode *head) {
     printf("\n");
 }
 
-struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2){
+struct ListNode *mergeTwoList(struct ListNode *l1, struct ListNode *l2) {
     if (l1 == NULL) { return l2; }
     if (l2 == NULL) { return l1; }
     
@@ -48,23 +48,41 @@ struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2){
     }
     return returnList->next;
 }
-
+struct ListNode* mergeKLists(struct ListNode** lists, int listsSize){
+    if (lists == NULL || listsSize <= 0) { return NULL; }
+    if (listsSize == 1) { return lists[0]; }
+    
+    while (listsSize > 1) {
+        for (int i = 0; i < listsSize/2; i++) {
+            lists[i] = mergeTwoList(lists[i], lists[listsSize - 1 - i]);
+        }
+        listsSize = (listsSize + 1)/2;
+    }
+    return lists[0];
+}
 
 int main(int argc, const char * argv[]) {
+    
     
     struct ListNode l1 = {8, NULL};
     struct ListNode l2 = {4, &l1};
     struct ListNode l3 = {1, &l2};
-    
+
     struct ListNode l4 = {9, NULL};
     struct ListNode l5 = {6, &l4};
     struct ListNode l6 = {2, &l5};
     
-    struct ListNode *l = mergeTwoLists(&l3, &l6);
+    struct ListNode **lists = (struct ListNode **)malloc(sizeof(struct ListNode *) * 2);
+    lists[0] = &l3;
+    lists[1] = &l6;
+    struct ListNode *l = mergeKLists(lists, 2);
     dump(l);
     
     return 0;
 }
+
+
+
 
 
 
