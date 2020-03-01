@@ -65,7 +65,7 @@ int list_queue_dequeue(ListQueue *queue, int *data) {
 }
 
 void list_queue_destory(ListQueue *queue) {
-    if (queue == NULL || list_queue_is_empty(queue)) {
+    if (queue == NULL) {
         return;
     }
     if (list_queue_is_empty(queue)) {
@@ -73,7 +73,6 @@ void list_queue_destory(ListQueue *queue) {
         return;
     }
     
-    int data = 0;
     while (!list_queue_is_empty(queue)) {
         list_queue_dequeue(queue, &data);
     }

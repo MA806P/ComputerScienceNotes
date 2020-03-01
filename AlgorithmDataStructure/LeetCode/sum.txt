@@ -59,10 +59,16 @@
 	23-合并K个排序链表
 
 
-c ------
 
 
-//链表
+
+
+
+
+
+//--------------- c --------------- 
+
+//--- 链表 ---
 struct ListNode {
     int val;
     struct ListNode *next;
@@ -81,14 +87,12 @@ void dump(struct ListNode *head) {
  struct ListNode l2 = {2, &l1};
  struct ListNode l3 = {3, &l2};
  struct ListNode l4 = {4, &l3};
- struct ListNode l5 = {5, &l4};
- struct ListNode l6 = {6, &l5};
- dump(&l6);
+ dump(&l3);
 
 
 
 
-//栈
+//--- 栈 ---
 typedef int  DATATYPE;
 typedef struct _list_stack {
     DATATYPE data;
@@ -140,8 +144,59 @@ void stackDump(stack *s) {
 }
 
 
+/*
+//--- 栈 ---
+struct stack_node {
+    int data;
+    struct stack_node *next;
+};
+typedef struct {
+    struct stack_node *next;
+} MyStack;
+MyStack* myStackCreate() {
+    MyStack *stack = (MyStack *)malloc(sizeof(MyStack));
+    if (stack == NULL) { return NULL; }
+    stack->next = NULL;
+    return stack;
+}
+void myStackPush(MyStack* obj, int x) {
+    if (obj == NULL) { return; }
+    struct stack_node *node = (struct stack_node*)malloc(sizeof(struct stack_node));
+    if (node == NULL) { return; }
+    node->data = x;
+    node->next = obj->next;
+    obj->next = node;
+}
+int myStackPop(MyStack* obj) {
+    if (obj == NULL || obj->next == NULL) { return -1; }
+    struct stack_node *node = obj->next;
+    obj->next = node->next;
+    int data = node->data;
+    free(node);
+    return data;
+}
+int myStackTop(MyStack* obj) {
+    if (obj == NULL || obj->next == NULL) {return -1; }
+    return obj->next->data;
+}
+bool myStackEmpty(MyStack* obj) {
+    if (obj == NULL) { return true; }
+    return obj->next == NULL;
+}
 
-//排序
+void myStackFree(MyStack* obj) {
+    if (obj == NULL) { return; }
+    while (obj->next != NULL) { myStackPop(obj); }
+    free(obj);
+}
+*/
+
+
+
+
+
+
+//--------------- 排序 --------------- 
 
 //快速排序
 //选择一元素(一般是最后一个)作为分界点，分界点前比它小，后面都是比它大的
@@ -171,7 +226,8 @@ void quick_sort(int *array, int p, int r) {
 
 
 
-swift ------
+
+//--------------- swift --------------- 
 
 extension StringProtocol {
     func indexDistance<S: StringProtocol>(of string: S) -> Int? { range(of: string)?.lowerBound.distance(in: self) }
