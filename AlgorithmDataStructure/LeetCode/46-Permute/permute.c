@@ -16,6 +16,7 @@ void backtrack(int* nums, int numsSize, int* returnSize, int** returnArray, int 
     if (first == numsSize) {
         returnArray[*returnSize] = nums;
         *returnSize += 1;
+        return;
     }
     
     for (int i = first; i < numsSize; i++) {
@@ -26,6 +27,7 @@ void backtrack(int* nums, int numsSize, int* returnSize, int** returnArray, int 
         swapItem(items + first, items + i);
         backtrack(items, numsSize, returnSize, returnArray, first + 1);
         swapItem(items + first, items + i);
+        //上面的作用，这个分支结束后，在交换回来，在原来的基础上再交换，而不是在交换后的基础上交换
     }
 }
 
