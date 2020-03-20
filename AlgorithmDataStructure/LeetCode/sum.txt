@@ -64,7 +64,7 @@ Boyer-Moore 投票算法.
 经典题目：
 53(最大子序和)
 300(最长上升子序列)
-
+A40(最小的k个数) TOP K 问题
 
 
 分类：
@@ -106,6 +106,11 @@ Boyer-Moore 投票算法.
 8、树-数据结构，递归 迭代
 	100(相同的树)
 	101(对称二叉树)
+	104(二叉树的最大深度)
+
+
+
+
 
 
 //--------------- c --------------- 
@@ -247,6 +252,8 @@ void swap_item(int *a, int *b) { int temp = *a; *a = *b; *b = temp; }
 int partition(int *array, int p, int r) {
     int i = p;
     for (int j = p; j < r; j++) {
+	//这里把大于 r 位的数，换到后面，小的换到前面
+	//保证了，i 位前的都小于 r，i 位是第一个大于 r 的，遍历完 i r 互换
         if (array[j] < array[r]) {
             if (i != j) { swap_item(array + i, array + j); }
             i++;
