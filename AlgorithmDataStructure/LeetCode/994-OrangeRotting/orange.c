@@ -143,7 +143,7 @@ int main(int argc, const char * argv[]) {
         }
         a[i] = a1;
     }
-    int b[3] = {3};
+    int b[3] = {3,3,3};
     printf("= %d\n", orangesRotting(a, 3, b));
     
     return 0;
