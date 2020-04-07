@@ -57,7 +57,7 @@ int main(int argc, const char * argv[]) {
     printf("\n");
     
     
-    int col[3] = {3};
+    int col[3] = {3,3,3};
     rotate(a, 3, col);
     
     for (int i = 0; i < 3; i++) {
