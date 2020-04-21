@@ -17,6 +17,7 @@ int maxArea(int* height, int heightSize){
     return maxArea;
 }*/
 
+//双指针，从两边往中间移动，找到最大值
 int maxArea(int* height, int heightSize){
     int maxArea = 0, width = 0, i = 0, j = heightSize - 1;
     while (i < j) {

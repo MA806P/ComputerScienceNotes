@@ -17,6 +17,7 @@ int* spiralOrder(int** matrix, int matrixSize, int* matrixColSize, int* returnSi
     *returnSize = matrixSize * colSize;
     int *ans = (int *)malloc(sizeof(int) * (*returnSize));
     
+    //用来记录是否被访问过
     int **seen = (int **)malloc(sizeof(int *)*matrixSize);
     for (int i = 0; i < matrixSize; i++) {
         int *colSeen = (int *)malloc(sizeof(int) * colSize);
