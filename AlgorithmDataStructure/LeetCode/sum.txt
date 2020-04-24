@@ -17,6 +17,7 @@ A1716(按摩师,时长)
 72(编辑距离 困难-不容易理解)
 887(鸡蛋掉落。困难)
 542(01 矩阵)
+面试题 08.11. 硬币
 
 
 
@@ -52,6 +53,23 @@ A1716(按摩师,时长)
 2、将问题分解为子问题并递归地解决它们。
 3、合并子问题的解以获得原始问题的解。
 
+二分
+二分查找
+33(搜素旋转排序数组) 
+34(在排序数组中查找元素的第一个和最后一个位置) 
+69(x的平方根)
+300(最长上升子序列)
+887(鸡蛋掉落。困难)
+
+二分递归、合并
+23(合并K个排序链表)
+A51(数组中的逆序对。归并排序)
+
+
+
+
+
+
 
 贪心算法：
 捡到西瓜，丢了芝麻。就是贪心，贪最大的，小的放弃扔了。
@@ -68,19 +86,6 @@ Boyer-Moore 投票算法.
 自动机
 8(字符串转换整数 atoi)这个有意思
 
-
-
-
-二分
-二分查找
-33(搜素旋转排序数组) 
-34(在排序数组中查找元素的第一个和最后一个位置) 
-69(x的平方根)
-300(最长上升子序列)
-887(鸡蛋掉落。困难)
-
-二分递归、合并
-23(合并K个排序链表)
 
 
 
@@ -161,6 +166,7 @@ A40(最小的k个数) TOP K 问题
 	543(二叉树的直径)
 	208(实现Trie前缀树) 
 	820(单词的压缩编码)
+	199(二叉树的右视图)
 
 9、柱形容器问题
 	11(盛最多水的容器)
@@ -294,6 +300,67 @@ void myStackFree(MyStack* obj) {
     free(obj);
 }
 */
+
+
+
+
+//--- 队列 ---
+typedef int DATATYPE;
+typedef struct m_queue_node {
+    DATATYPE data;
+    struct m_queue_node *next;
+} MQueueNode;
+
+typedef struct m_list_queue {
+    int size;
+    MQueueNode *head;
+    MQueueNode *tail;
+} MQueue;
+
+#define queue_is_empty(queue) (queue->size == 0)
+
+MQueue *m_queueCreate(void) {
+    MQueue *queue = (MQueue *)malloc(sizeof(MQueue));
+    if (queue == NULL) { return NULL; }
+    queue->size = 0;
+    queue->head = NULL;
+    queue->tail = NULL;
+    return queue;
+}
+
+int m_queuePush(MQueue *queue, DATATYPE data) {
+    if (queue == NULL) { return -1; }
+    MQueueNode *node = (MQueueNode *)malloc(sizeof(MQueueNode));
+    if (node == NULL) { return -1; }
+    node->data = data;
+    node->next = NULL;
+    if (queue_is_empty(queue)) {
+        queue->head = node;
+    } else {
+        queue->tail->next = node;
+    }
+    queue->tail = node;
+    queue->size += 1;
+    return 0;
+}
+
+DATATYPE m_queuePop(MQueue *queue) {
+    if (queue == NULL || queue_is_empty(queue)) { return NULL; }
+    MQueueNode *node = queue->head;
+    DATATYPE data = node->data;
+    queue->head = node->next;
+    queue->size -= 1;
+    if (queue->head == NULL) { queue->tail = NULL; }
+    free(node);
+    return data;
+}
+
+void m_queueDestroy(MQueue *queue) {
+    if (queue == NULL) { return; }
+    if (queue_is_empty(queue)) { free(queue); return; }
+    while (!queue_is_empty(queue)) { m_queuePop(queue); }
+    free(queue);
+}
 
 
 

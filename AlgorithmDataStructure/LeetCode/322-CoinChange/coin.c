@@ -50,6 +50,16 @@ int coinChange(int* coins, int coinsSize, int amount){
     for (int i = 1; i < max; i++) {
         dp[i] = max;
     }
+    
+    /**
+     [1,2,5] 11
+     dp[0] = 0
+     dp[1] = min(dp[1-1], dp[1-2], dp[1-5]) + 1 = 1
+     dp[2] = min(dp[2-1], dp[2-2], dp[2-5]) + 1 = 0 + 1 = 1
+     dp[3] = min(dp[3-1], dp[3-2], dp[3-5]) + 1 = 1 + 1 = 2
+     .
+     .
+     */
     for (int i = 1; i <= amount; i++) {
         for (int j = 0; j < coinsSize; j++) {
             if (coins[j] <= i) {
