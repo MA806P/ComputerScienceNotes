@@ -25,13 +25,21 @@ bool canJump(int* nums, int numsSize){
     
 }
 
-
-
-
 int main(int argc, const char * argv[]) {
     
     int a[] = {1,3,2,9,0,0,0};
     printf("ans = %d\n", canJump(a, 7));
+    
+    /**
+     ----- 0 = 1 0 < 1
+     ****** 0 = 1 1 < 1
+     ----- 1 = 3 1 < 4
+     ****** 1 = 3 4 < 4
+     ----- 2 = 2 4 < 4
+     ****** 2 = 2 4 < 4
+     ----- 3 = 9 4 < 12
+     ans = 1
+     */
     
     /**
      [0] true
