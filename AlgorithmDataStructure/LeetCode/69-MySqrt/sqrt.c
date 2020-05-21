@@ -27,7 +27,7 @@ int mySqrt1(int x){
 }
 
 
-//方法三，二叉查找
+//方法三，二分叉查找
 int mySqrt2(int x){
     if (x < 2) { return x; }
     
