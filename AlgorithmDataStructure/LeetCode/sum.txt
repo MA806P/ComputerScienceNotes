@@ -380,6 +380,23 @@ void m_queueDestroy(MQueue *queue) {
 
 
 
+
+//树
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+    struct TreeNode n11 = {1, NULL, NULL};
+    struct TreeNode n12 = {2, NULL, NULL};
+    struct TreeNode n1 = {3, &n11, &n12};
+    struct TreeNode n21 = {4, NULL, NULL};
+    struct TreeNode n22 = {5, NULL, NULL};
+    struct TreeNode n2 = {6, &n21, &n22};
+    struct TreeNode n = {7, &n1, &n2};
+
+
+
 //--------------- 排序 --------------- 
 
 //快速排序
