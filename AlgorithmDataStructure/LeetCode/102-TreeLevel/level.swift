@@ -19,7 +19,7 @@ public class TreeNode {
 class Solution {
     
     //广度优先 BFS
-    func levelOrderBottom(_ root: TreeNode?) -> [[Int]] {
+    func levelOrder0(_ root: TreeNode?) -> [[Int]] {
         if root == nil { return [] }
         
         var ans = [[Int]]()
@@ -34,9 +34,28 @@ class Solution {
                 if node.left != nil { q.append(node.left!) }
                 if node.right != nil { q.append(node.right!) }
             }
-            ans.insert(levelArray, at: 0) //这里从上往下，每次都插入第一位
+            ans.append(levelArray)
         }
         return ans
+    }
+    
+    
+    //深度优先遍历 DFS. 递归
+    var dfsAns = [[Int]]()
+    func dfs(_ root: TreeNode?, _ depth: Int) {
+        if root == nil { return; }
+        if depth == dfsAns.count {
+            dfsAns.append([])
+        }
+        dfsAns[depth].append(root!.val)
+        
+        dfs(root!.left, depth + 1) //注意左右顺序，从左到右
+        dfs(root!.right, depth + 1)
+    }
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        if root == nil { return [] }
+        dfs(root, 0)
+        return dfsAns
     }
     
     
@@ -50,4 +69,4 @@ n1.left = n11
 n1.right = n12
 
 let s = Solution()
-print(s.levelOrderBottom(n1))
+print(s.levelOrder(n1))

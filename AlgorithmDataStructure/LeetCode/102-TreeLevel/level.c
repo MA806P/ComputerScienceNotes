@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 struct TreeNode {
     int val;
     struct TreeNode *left;
@@ -72,29 +73,21 @@ void m_queueDestroy(MQueue *queue) {
 
 
 
-//计算树的深度
-int maxDepth(struct TreeNode* root) {
-    if (root == NULL) { return 0; }
-    
-    int l = maxDepth(root->left);
-    int r = maxDepth(root->right);
-    return l > r ? (l + 1) : (r + 1);
-}
+
+#define MAX_LEVEL 100
 
 
-int** levelOrderBottom(struct TreeNode* root, int* returnSize, int** returnColumnSizes){
+int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes){
     
-    int depth = maxDepth(root);
-    *returnSize = depth;
-    int **ans = (int **)malloc(sizeof(int *) * depth);
-    *returnColumnSizes = (int *)malloc(sizeof(int) * 1000);
+    *returnSize = 0;
+    int **ans = (int **)malloc(sizeof(int *) * MAX_LEVEL);
+    *returnColumnSizes = (int *)malloc(sizeof(int) * MAX_LEVEL);
     if (root == NULL) { return ans; }
     
     //广度优先遍历 BFS
     MQueue *q = m_queueCreate();
     m_queuePush(q, root);
     
-    int count = depth - 1;
     while (!queue_is_empty(q)) {
         int size = q->size;
         int *returnColum = (int *)malloc(sizeof(int) * size);
@@ -107,10 +100,10 @@ int** levelOrderBottom(struct TreeNode* root, int* returnSize, int** returnColum
             if (node->left != NULL) { m_queuePush(q, node->left); }
             if (node->right != NULL) { m_queuePush(q, node->right); }
         }
-        //每一层遍历完毕，将数组放入大数组中，倒着放入，从底往上
-        (*returnColumnSizes)[count] = size;
-        ans[count] = returnColum;
-        count -= 1;
+        //每一层遍历完毕，将数组放入大数组中
+        (*returnColumnSizes)[(*returnSize)] = size;
+        ans[(*returnSize)] = returnColum;
+        (*returnSize) += 1;
     }
     
     
@@ -136,7 +129,7 @@ int main(int argc, const char * argv[]) {
     int returnSize = 0;
     int *returnColumnSizes;
     
-    int **ans = levelOrderBottom(&n, &returnSize, &returnColumnSizes);
+    int **ans = levelOrder(&n, &returnSize, &returnColumnSizes);
     printf("tree level = %d\n", returnSize);
     for (int i = 0; i < returnSize; i++) {
         int levelSize = returnColumnSizes[i];
@@ -149,5 +142,6 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
+
 
 
