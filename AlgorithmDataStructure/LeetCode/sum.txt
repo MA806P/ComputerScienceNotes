@@ -114,6 +114,12 @@ A40(最小的k个数) TOP K 问题
 171(Excel表列序号)
 
 
+时间复杂度logN
+二分法
+172-阶乘后的零
+
+
+
 
 分类：
 1、数组中找和 = target。
@@ -456,12 +462,13 @@ void quick_sort(int *array, int p, int r) {
 
 //从某个位置翻转数组
 void reverse(int *nums, int numsSize, int start) {
-    int i = start, j = numsSize - 1;
+    int i = start, j = numsSize - 1, temp = 0;
     while (i < j) {
-        swap(nums, i, j);
+        temp = nums[i]; nums[i] = nums[j]; nums[j] = temp;
         i++; j--;
     }
 }
+
 
 
 
