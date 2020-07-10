@@ -51,6 +51,7 @@ int maxProfit1(int* prices, int pricesSize){
  其实就是求得，当前值与之前所有的差最大值
  
  区间和可以转换成求差的问题，求差问题，也可以转换成区间和的问题。
+ 与题目 53.最大子序和 类似
  */
 int maxProfit(int* prices, int pricesSize){
     if (prices == NULL || pricesSize <= 1) { return 0; }
@@ -60,6 +61,7 @@ int maxProfit(int* prices, int pricesSize){
         int temp = profit + prices[i] - prices[i - 1];
         profit = temp > 0 ? temp : 0;
         max = max < profit ? profit : max;
+        printf("[%d]=%d [%d]=%d  temp=%d  profit=%d  max=%d\n", i-1, prices[i-1], i, prices[i], temp, profit, max);
     }
     return max;
 }
@@ -69,6 +71,20 @@ int main(int argc, const char * argv[]) {
     int coins[] = {7,1,5,3,6,4};
     int a = maxProfit(coins, 6);
     printf("=== %d\n", a);
+    
+    /**
+     7  1  5  3  6  4
+     0  0  4  2  5  3
+     
+     [0]=7 [1]=1  temp=-6  profit=0  max=0
+     [1]=1 [2]=5  temp=4  profit=4  max=4
+     [2]=5 [3]=3  temp=2  profit=2  max=4
+     [3]=3 [4]=6  temp=5  profit=5  max=5  相当于 6-1=5
+     [4]=6 [5]=4  temp=3  profit=3  max=5
+     === 5
+     
+     */
+    
     return 0;
 }
 
