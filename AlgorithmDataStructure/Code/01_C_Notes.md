@@ -62,6 +62,15 @@ void srand(unsigned seed);
 
 
 
+9、sprintf
+int sprintf(char *str, const char *format, ...) 发送格式化输出到 str 所指向的字符串
+返回值是 拼接后的字符串长度
+char str[80];
+sprintf(str, "Pi 的值 = %f", M_PI);
+str = Pi 的值 = 3.141593
+
+
+
 
 
 字符串
