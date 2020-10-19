@@ -12,6 +12,11 @@ https://www.sunyazhou.com/2020/07/06/20200721iOSinterviewAnswers/
 # 概念  
 
 
+
+
+
+
+
 ### 消息传递机制  
 
 OC 对象都是 C 语言结构体
