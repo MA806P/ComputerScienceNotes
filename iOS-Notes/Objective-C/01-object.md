@@ -12,12 +12,74 @@ https://www.sunyazhou.com/2020/07/06/20200721iOSinterviewAnswers/
 # 概念  
 
 
+OC 是 C 语言的超集，在 C 语言的主体上加上了面向对象的特性，这是为了方便 APP 的开发，同时也兼顾了语言的整体性能。  
+
+
+关键词
+strong 表示指向并拥有该对象。其修饰的对象引用计数会加1，只要引用计数不为0，就不会被销毁，可强行将其设为 nil 销毁。  
+weak 表示指向但不拥有该对象。引用计数不会增加，无需手动设置，该对象会自行在内存中被销毁。  
+assign 主要用于修饰基本数据类型，NSInteger CGFloat 这些数值主要存在于栈。  
+
+weak 一般用来修饰对象， assign 一般用来修饰基本数据类型，assign 修饰的对象被释放后，指针的地址依然存在，造成野指针，在堆上容易造成崩溃，而栈上的内存系统会自动处理，不会造成野指针。  
+strong 的复制是多个指针指向同一个地址，copy 的复制是每次会在内存中复制一份对象，指针指向不同地址，copy一般修饰有对应的可变类型的不可变对象上 NSString NSDictionary NSArray 
+
+OC 中基本的数据类型默认关键字是 atomic readwrite assign。普通属性的默认关键字是 atomic readwrite strong。
+
+
+atomic 保证 setter getter 的完整性（原子性，在执行一个操作时不被中间打断，要么成功要么失败，这个操作完成后，后面才能继续操作，相当于set get 操作中加了锁），任何线程访问都可得到一个完整的初始化后的对象，速度比较慢，但是安全，也不是绝对的线程安全。当对个线程同时调用 set get 就会导致获得的对象值不一样（A线程写完后，B线程写，当A线程需要读取时，却读到了B线程写入的值，这就破坏了线程安全），要想线程绝对安全，就要用 @synchronized.
+nonatomic 不保证 setter getter 的完整性，当多个线程访问可能会返回未初始化的对象，这比 atomic 的速度快，但是线程也是不安全的
+	
 
 
 
 
+## OC对象初始化  
+Objective-C 在初始化时，会自动给每个属性（成员变量）赋值为 0 或者 nil，没有强制要求额外为每个属性（成员变量）赋值，方便的同时也缺少了代码的安全性。  
+Objective-C 中的指定初始化器会在后面被 NS_DESIGNATED_INITIALIZER 修饰，对于多个构造方法，它可以指定一个基础的构造方法。其它快捷的构造方法都必须通过它来实现类的初始化。代码规范的一种。可以避免不必要的bug。良好的编程习惯。  
+```
+// NSObject
+@interface NSObject <NSObject>
+- (instancetype)init
+#if NS_ENFORCE_NSOBJECT_DESIGNATED_INITIALIZER
+    NS_DESIGNATED_INITIALIZER
+#endif
+    ;
+@end
+  
+  
+// UIView
+@interface UIView : UIResponder
+- (instancetype)initWithFrame:(CGRect)frame NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+@end
+```
 
-### 消息传递机制  
+
+无论继承自什么类，都经常需要新的初始化方法，而这个新的初始化方法其实就是新的指定初始化器。如果存在一个新的指定初始化器，那么原来的指定初始化器就会自动退化成便利初始化器。
+为了遵循必须要调用指定初始化器的规则，就必须重写旧的定初始化器，在里面调用新的指定初始化器，这样就能确保所有属性（成员变量）被初始化。
+根据这条规则，可以从NSObject、UIView中看出，由于UIView拥有新的指定初始化器-initWithFrame:，导致父类NSObject的指定初始化器-init退化成便利初始化器。所以当调用[[UIView alloc] init]时，-init里面必然调用了-initWithFrame:
+当存在一个新的指定初始化器的时候，推荐在方法名后面加上NS_DESIGNATED_INITIALIZER，主动告诉编译器有一个新的指定初始化器，这样就可以使用 Xcode 自带的Analysis功能分析，找出初始化过程中可能存在的漏洞
+
+```
+// 推荐加上NS_DESIGNATED_INITIALIZER
+- (instancetype)initWithFrame:(CGRect)frame name:(NSString *)name NS_DESIGNATED_INITIALIZER;
+
+// 旧的指定初始化器就自动退化成便利初始化器，必须在里面调用新的指定初始化器
+- (instancetype)initWithFrame:(CGRect)frame {
+return [self initWithFrame:frame name:@"Daniels"];
+}
+```
+
+如果不想去重写旧的指定初始化器，但又不想存在漏洞和隐患，那么可以使用NS_UNAVAILABLE把旧的指定初始化器都废弃，外界就无法调用旧的指定初始化器
+// 废弃旧的指定初始化器
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+
+
+一个新的类也可以不增加新的初始化方法，在 Objective-C 中，子类会直接继承父类所有的初始化方法
+
+
+
+## 消息传递机制  
 
 OC 对象都是 C 语言结构体
 每个对象结构体的首个成员是Class类的变量，该变量定义了对象所属的类，通常称为 is a 指针
@@ -33,7 +95,7 @@ OC对象的每个方法都可以视为简单的C函数，其原型如下：<retu
 
 
 
-### 消息转发机制  
+## 消息转发机制  
 
 在编译期向类发送了其无法解读的消息并不会报错，因为在运行期可以继续向类中添加方法，所以编译器在编译时还无法确知类中到底会不会有某个方法实现。当对象收到无法解读的消息后，就会启用“消息转发”(message forwarding)机制，程序员可以经此过程告诉对象应该如何处理未知消息。
 
@@ -68,6 +130,16 @@ imp();
 
 
 # 问题  
+
+
+
+什么是 ARC？
+automatic reference counting 内存管理机制，原先需要手动添加 retain release 来处理内存管理的引用计数，现可以自动的由编译器完成。
+ARC 与 Garbage Collection 的区别，GC 在运行时管理内存，可以解决 retain cycle，而 ARC 在编译时管理内存。
+
+
+什么情况下会出现循环引用？
+两个或两个以上对象互相强引用，导致对象无法被释放的现象，这是内存泄漏的一种情况。可用 Xcode 的 debug memory graph 检查
 
 
 
