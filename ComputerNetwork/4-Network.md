@@ -21,7 +21,7 @@ ICMP报文有很多的类型，不同类型有不同的代码。最常用的类�
 差错报文的结构相对复杂一些，除了前面还是 IP，ICMP 的前8字节不变，后面则跟上出错的那个IP包的IP头和IP正文的前8个字节。
 
 ping：查询报文类型的使用
-![ping](https://github.com/MA806P/ComputerScienceNotes/blob/master/ComputerNetwork/Images/4-Network-Ping.jpg)
+![ping](./Images/4-Network-Ping.jpg)
 在规定的时间内，源主机没有接到 ICMP 的应打包，说明主机不可达；如果收到应答包，说明可达，源主机会检测，计算出 ICMP 数据包的时间延迟。
 如在自己的可控范围之内，遇到网络不通的问题，除了直接ping目标的IP地址外，还应有一个清晰得网络拓扑图，要知道经过哪些设备，然后逐个ping中间的这些设备或机器。如果可能的话在这些关键点，通过 tcpdump -i eth0 icmp, 查看包有没有到达某个点，回复的包到达哪一个点，可以更加容易推断出错的位置。
 
